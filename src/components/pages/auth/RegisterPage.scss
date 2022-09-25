@@ -1,0 +1,34 @@
+@import "../../../Theme.scss";
+.Register {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  input,
+  div {
+    color: white;
+  }
+  label {
+    color: gray;
+  }
+  form {
+    color: white;
+    background-color: $surface;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 500px;
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      h6 {
+        margin-left: 15px;
+        cursor: pointer;
+      }
+    }
+    hr {
+      margin: 10px 0;
+    }
+  }
+}

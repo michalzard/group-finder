@@ -1,0 +1,52 @@
+@import "../../../Theme.scss";
+
+.Login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  label,
+  input {
+    color: white;
+  }
+  form {
+    background-color: $surface;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    padding: 25px;
+    border-radius: 20px;
+    width: 400px;
+    .log-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      h6 {
+        margin: 0;
+      }
+    }
+    button {
+      border: 1px solid $gradient-pink !important;
+      color: $gradient-pink !important;
+    }
+    hr {
+      width: 100%;
+      border-color: $gradient-pink;
+    }
+    section {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+      h6 {
+        cursor: pointer;
+        margin-left: 20px;
+      }
+    }
+    .description {
+      color: lightgray;
+    }
+  }
+}

@@ -1,0 +1,169 @@
+@import "../../Theme.scss";
+@mixin flexWhite() {
+  display: flex;
+  color: white;
+}
+.landing-page {
+  @include flexWhite();
+  flex-direction: column;
+  button {
+    border: 1px solid $gradient-pink !important;
+    color: white;
+    margin-left: 10px;
+  }
+  svg {
+    font-size: 35px;
+    margin-right: 20px;
+  }
+  .hero {
+    background: linear-gradient(to right, $gradient-purple, $gradient-pink);
+    padding: 100px;
+    img {
+      object-fit: scale-down;
+    }
+    .alreadyMember {
+      color: lightgray;
+      display: flex;
+    }
+    .btnImg {
+      width: 80px;
+      height: 25px;
+      margin: 0px 10px;
+    }
+    .btns {
+      button {
+        color: lightgray;
+        border: 1px solid $gradient-pink !important;
+      }
+      margin-bottom: 20px;
+    }
+  }
+  .connect {
+    @include flexWhite();
+    flex-direction: column;
+    padding: 100px;
+    margin-bottom: 100px;
+    button {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    article {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 50px;
+
+      h6 {
+        color: lightgray;
+      }
+    }
+  }
+  .experience {
+    @include flexWhite();
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px;
+    .exp-grid {
+      display: flex;
+      margin: 100px 0;
+      section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px;
+
+        border: 1px solid $surface;
+        h4 {
+          margin-bottom: 20px;
+          font-weight: 300;
+        }
+      }
+      section:first-child {
+        border-left: 1px solid transparent;
+      }
+      section:last-child {
+        border-right: 1px solid transparent;
+      }
+      svg {
+        font-size: 150px;
+      }
+    }
+  }
+  .chat-w-friends {
+    @include flexWhite();
+
+    justify-content: space-around;
+    align-items: center;
+    img {
+      width: 627px;
+      height: 475px;
+      object-fit: scale-down;
+      border-radius: 15px;
+    }
+  }
+  .share-profile {
+    @include flexWhite();
+
+    margin: 200px 0;
+    padding: 100px;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .pros-cons {
+    @include flexWhite();
+
+    flex-direction: column;
+    align-items: center;
+    padding: 200px;
+    article {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .pro,
+    .con {
+      display: flex;
+      align-items: center;
+    }
+    .pro > svg {
+      color: $gradient-purple;
+    }
+    .con > svg {
+      color: $gradient-pink;
+    }
+  }
+}
+.links {
+  @include flexWhite();
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  margin: 100px;
+  img {
+    width: 36px;
+    height: 36px;
+    margin: 0 15px;
+    cursor: pointer;
+  }
+  .link-imgs {
+    background-color: $surface;
+    padding: 15px;
+    border-radius: 40px;
+    margin-top: 20px;
+  }
+}
+footer {
+  @include flexWhite();
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+  a {
+    color: $gradient-pink;
+    text-decoration: none;
+  }
+}
