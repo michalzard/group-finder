@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../schemas/user");
+const { parseCookie, checkForSession } = require("../utils");
 
 router.post("/register", (req, res) => {
   try {
@@ -14,13 +15,12 @@ router.post("/register", (req, res) => {
         email,
         password,
       });
-      registeredUser
-        .save()
+      registeredUser.save()
         .then((doc) => {
           doc.set("password", undefined);
-          req.session.user_id = doc._id;
+          req.session.user_id=registeredUser._id;
           req.session.save();
-          res.cookie("session_id", req.session.cookie);
+          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24, /*1 day*/ });
           res.status(200).send({ message: "User registered", user: doc });
         })
         .catch((err) => {
@@ -30,7 +30,7 @@ router.post("/register", (req, res) => {
       res.status(400).send({ message: "Bad Request" });
     }
   } catch (err) {
-    res.status(500).send({ message: "error", err });
+    res.status(500).send(err);
   }
 });
 
@@ -45,10 +45,15 @@ router.post("/login", async (req, res) => {
       if (foundUser) {
         const isValidPassword = await foundUser.validatePassword(password);
         
-        if(isValidPassword) res.status(200).send({message:"Login successful",user:foundUser.toJSON()});
+        if(isValidPassword){
+          req.session.user_id=foundUser._id;
+          req.session.save();
+          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24, /*1 day*/ }); 
+          res.status(200).send({message:"Login successful",user:foundUser.toJSON()});
+        }
         else res.status(401).send({message:"Username or password is incorrect"});
       } else {
-        res.status(404).send({ message: "Entity not found" });
+        res.status(404).send({ message: "Username or password is incorrect" });
       }
     } else {
       res.status(400).send({ message: "Bad Request" });
@@ -60,4 +65,22 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", (req, res) => {});
 
+
+router.get("/session",async (req,res)=>{
+  try{
+  const cookie = parseCookie(req.headers.cookie);
+  if(cookie.session_id){
+    const sessionObject = await checkForSession(cookie.session_id);
+    const {user_id} = sessionObject.session;
+    const foundUser = await User.findById(user_id);
+    if(foundUser){
+      res.status(200).send({message:"Session loaded",user:foundUser.toJSON()});
+    }else{
+      res.status(204).send({message:"Session expired"});
+    }
+  }else res.status(204).send({message:"Session expired"});
+}catch(err){
+  res.status(500).send(err);
+}
+})
 module.exports = router;

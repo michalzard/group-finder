@@ -32,14 +32,13 @@ app.use(session({
     store:dbStore,
 }));
 
-app.use(cors());//enables cors
+app.use(cors({credentials:true,origin:true}));//enables cors
 app.use(express.json())//enables json request bodies
 app.use(express.urlencoded({extended:true}));//enables formdata/multiplart trough request bodies
 
 //Routes
 //
 const authRoute = require("./routes/auth");
-
 app.use("/auth",authRoute)
 
 
