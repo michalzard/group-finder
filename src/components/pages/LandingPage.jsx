@@ -13,6 +13,7 @@ import ChatExample from "../../assets/chat-example.png";
 import ShareIcon from "@mui/icons-material/Share";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
+import Footer from "../Footer";
 //links
 import DiscordLogo from "../../assets/discord-icon.svg";
 import TwitterIcon from "../../assets/twitter-icon.png";
@@ -57,7 +58,7 @@ function HeroSection() {
 
       <ButtonGroup className="btns">
         <Button variant="outlined" onClick={()=>{navigate("/signup")}} startIcon={<EditIcon />}>
-          Sign up
+          Register
         </Button>
         <Button variant="outlined" endIcon={<ArrowDropDownIcon />}>
           What is{" "}
@@ -289,18 +290,4 @@ function SocialLinks() {
   );
 }
 
-function Footer() {
-  return (
-    <footer>
-      <img src={GroupsLogo} alt="Groups Logo" />
-      <div className="copyright">
-        <Typography variant="h6" gutterBottom>
-          Made with ❤️ by <a href="https://github.com/michalzard">Michalzard</a>
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          © Groups ~ {new Date().getFullYear()}. All rights reserved.
-        </Typography>
-      </div>
-    </footer>
-  );
-}
+
