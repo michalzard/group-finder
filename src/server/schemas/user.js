@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const {v4} = require("uuid");
 
 const userSchema = new mongoose.Schema(
   {
+    id:{
+      type:String,
+      default:v4(),
+    },
     email: {
       type: String,
       required: true,
@@ -53,6 +58,7 @@ userSchema.methods.validatePassword = async function (password) {
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
+  delete obj._id;
   return obj;
 };
 
