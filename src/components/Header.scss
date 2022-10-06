@@ -1,0 +1,29 @@
+@import "../Theme.scss";
+
+header {
+  display: flex;
+  color: white;
+  width: 100%;
+  padding: 10px 20px;
+  section,
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+  }
+  section:first-child {
+    margin-right: auto;
+  }
+  section:last-child {
+    margin-left: auto;
+  }
+  img {
+    width: 42px;
+    height: 42px;
+  }
+  .nav{
+    margin:0 20px;
+  }
+}
