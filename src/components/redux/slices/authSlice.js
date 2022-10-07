@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userLogin, userSession } from "../reducers/userReducers";
+import { userLogin, userLogout, userRegister, userSession } from "../reducers/userReducers";
 
 const authSlice = createSlice({
   name: "Auth",
@@ -8,9 +8,11 @@ const authSlice = createSlice({
     isLoggedIn: false,
     loading: false,
     error: "",
+    success: "",
   },
   //   reducers: {},
   extraReducers: {
+    //userLogin
     [userLogin.pending]: (state) => {
       state.loading = true;
     },
@@ -19,24 +21,63 @@ const authSlice = createSlice({
       const { message, ...user } = action.payload;
       state.user = user;
       state.isLoggedIn = true;
-      state.error = message;
+      state.error = "";
+      state.success = message;
     },
     [userLogin.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload;
+      state.success = "";
     },
+    //userSession
     [userSession.pending]: (state) => {
       state.loading = true;
     },
     [userSession.fulfilled]: (state, action) => {
       state.loading = false;
-      const {message,user} = action.payload;
+      const { message, user } = action.payload;
       state.user = user;
       state.isLoggedIn = true;
-      state.error = message;
+      state.error = "";
+      state.success = message;
     },
     [userSession.rejected]: (state, action) => {
       state.loading = false;
+      state.error = action.payload;
+      state.success = "";
+    },
+    //userLogout
+    [userLogout.pending]: (state) => {
+      state.loading = true;
+    },
+    [userLogout.fulfilled]: (state, action) => {
+      state.loading = false;
+      const { message } = action.payload;
+      state.success = message;
+      state.user = {};
+      state.error = "";
+      state.isLoggedIn = false;
+    },
+    [userLogout.rejected]: (state, action) => {
+      state.loading = false;
+      state.success = "";
+      state.error = action.payload;
+    },
+    //userRegister
+    [userRegister.pending]: (state) => {
+      state.loading = true;
+    },
+    [userRegister.fulfilled]: (state,action) => {
+      state.loading = false;
+      const {user,message} = action.payload;
+      state.isLoggedIn=true;
+      state.user = user;
+      state.success=message;
+      state.error="";
+    },
+    [userRegister.rejected]: (state,action) => {
+      state.loading = false;
+      state.isLoggedIn=false;
       state.error = action.payload;
     },
   },

@@ -25,7 +25,6 @@ export const userSession = createAsyncThunk(
     return await axios
       .get(`${API_URL}/auth/session`,{withCredentials:true})
       .then((data) => {
-        console.log(data);
         const {message,user} = data.data;
         return {message,user};
       })
@@ -34,3 +33,24 @@ export const userSession = createAsyncThunk(
       });
   }
 );
+
+export const userRegister = createAsyncThunk(
+  "Auth/Register",
+  async ({email,username,password},thunkApi) =>{
+    // return register logic
+    return await axios.post(`${API_URL}/auth/register`,{email,username,password})
+    .then((data)=>{
+      const {message,user} = data.data;
+      console.log(data);
+      return {message,user};
+    }).catch(err=>{console.log(err);return thunkApi.rejectWithValue(err.response.data.message)});
+  }
+);
+
+
+export const userLogout = createAsyncThunk(
+  "Auth/Logout", async(_,thunkApi) => {
+    return await axios.get(`${API_URL}/auth/logout`,{withCredentials:true})
+    .then(data=>{return data.data}).catch(err=>{return thunkApi.rejectWithValue(err.response.data.message);})
+  }
+)
