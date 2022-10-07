@@ -57,7 +57,7 @@ function HeroSection() {
       </Typography>
 
       <ButtonGroup className="btns">
-        <Button variant="outlined" onClick={()=>{navigate("/signup")}} startIcon={<EditIcon />}>
+        <Button variant="outlined" onClick={()=>{navigate("/register")}} startIcon={<EditIcon />}>
           Register
         </Button>
         <Button variant="outlined" endIcon={<ArrowDropDownIcon />}>
@@ -261,7 +261,7 @@ function SocialLinks() {
         You can find us anywhere on these platforms.
       </Typography>
       <div className="link-imgs">
-        <a href="https://discord.gg/JB9jRykr" target="_blank" rel="noreferrer">
+        <a href="https://discord.gg/NsDs5SKedr" target="_blank" rel="noreferrer">
           <img src={DiscordLogo} alt="Discord Logo" />
         </a>
         <a
