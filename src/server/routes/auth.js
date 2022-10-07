@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../schemas/user");
-const { parseCookie, checkForSession } = require("../utils");
+const { parseCookie, checkForSession, deleteSession } = require("../utils");
 
 router.post("/register", (req, res) => {
   try {
@@ -24,13 +24,13 @@ router.post("/register", (req, res) => {
           res.status(200).send({ message: "User registered", user: doc });
         })
         .catch((err) => {
-          res.status(422).send({ message: "Unprocessable Entity", err });
+          res.status(422).send({ message: "Unprocessable Entity", err:err.message });
         });
     } else {
       res.status(400).send({ message: "Bad Request" });
     }
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 });
 
@@ -59,17 +59,30 @@ router.post("/login", async (req, res) => {
       res.status(400).send({ message: "Bad Request" });
     }
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send(err.message);
   }
 });
 
-router.post("/logout", (req, res) => {});
+router.get("/logout", async (req, res) => {
+  try{
+    const cookie = parseCookie(req.headers.cookie);
+    if(cookie.session_id){
+    //clear cookie there removing session on client side and delete session from db
+    const deletedSession=await deleteSession(cookie.session_id);
+    res.clearCookie("session_id");
+    if(deletedSession) res.status(200).send({message:"User logged out"});
+    else res.status(200).send({message:"Session expired"});
+    }
+  }catch(err){
+    res.status(500).send(err.message);
+  }
+});
 
 
 router.get("/session",async (req,res)=>{
   try{
-  const cookie = parseCookie(req.headers.cookie);
-  if(cookie.session_id){
+    if(req.headers.cookie){
+    const cookie = parseCookie(req.headers.cookie);
     const sessionObject = await checkForSession(cookie.session_id);
     const {user_id} = sessionObject.session;
     const foundUser = await User.findById(user_id);
@@ -78,9 +91,11 @@ router.get("/session",async (req,res)=>{
     }else{
       res.status(204).send({message:"Session expired"});
     }
-  }else res.status(204).send({message:"Session expired"});
+  }else{
+    res.status(401).send({message:"Session expired"});
+  }
 }catch(err){
-  res.status(500).send(err);
+  res.status(500).send(err.message);
 }
 })
 module.exports = router;
