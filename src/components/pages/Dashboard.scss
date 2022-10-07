@@ -1,0 +1,54 @@
+@import "../../Theme.scss";
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  //62px is height os navbar
+  height: calc(100vh - 62px);
+  color: white;
+  align-items: center;
+  padding: 50px;
+  .dashboard-content {
+    display: flex;
+    justify-content: center;
+    padding: 100px;
+    width: 100%;
+  }
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  .dashboard-sidebar-window {
+    display: flex;
+    background-color: $surface;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    .info {
+      max-width: 320px;
+      max-height: 150px;
+      flex: 1;
+    }
+    svg {
+      width: 40px;
+      height: 40px;
+      margin-left: 20px;
+    }
+  }
+  .discord-invite {
+    background: url("../../assets/discord-photo.png") no-repeat right;
+    background-size: cover;
+    margin-bottom: 80px;
+  }
+  .dashboard-sidebar {
+    margin-right: 100px;
+  }
+  .dashboard-new {
+    display: flex;
+    flex-direction: column;
+    background-color: $surface;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    width: 50%;
+  }
+}
