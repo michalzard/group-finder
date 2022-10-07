@@ -5,8 +5,10 @@ import LandingPage from './components/pages/LandingPage';
 import LoginPage from './components/pages/auth/LoginPage';
 import RegisterPage from './components/pages/auth/RegisterPage';
 import { useDispatch, useSelector } from 'react-redux';
-import Dashboard from './components/pages/Dashboard';
 import { userSession } from './components/redux/reducers/userReducers';
+import Dashboard from './components/pages/Dashboard';
+import Friends from './components/pages/Friends';
+import Discover from './components/pages/Discover';
 
 function App() {
   const dispatch = useDispatch();
@@ -20,9 +22,12 @@ function App() {
       <Route path="/login" element={<LoginPage/>} />
       <Route path="/register" element={<RegisterPage/>}/>
 
-      <Route path="/dashboard" element={<Dashboard/>}>
+      <Route path="/dashboard" element={<Dashboard/>}/>
+      <Route path="/discover" element={<Discover/>}/>
+      <Route path="/friends" element={<Friends/>}>
 
       </Route>
+
     </Routes>
   );
 }
