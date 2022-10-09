@@ -18,7 +18,10 @@
     border-radius: 15px;
     padding: 20px;
     max-width: 500px;
-
+    .MuiFormControl-root{
+      margin:5px 0;//space between inputs
+    }
+    
     .form-footer {
       display: flex;
       align-items: center;

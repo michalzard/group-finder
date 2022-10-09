@@ -1,67 +1,78 @@
 import { Button, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userLogin } from "../../redux/reducers/userReducers";
+import { userLogin } from "../../../redux/reducers/userReducers";
 import "./LoginPage.scss";
-import {handleFormChange,FormValidator} from "../../formHelpers";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 
 function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [formState,setFormState] = useState({username:"",password:""});
-
-
-
-  const handleLogin = async () => {
-      const validation = new FormValidator(formState).isString("username").minmax("username",3,5).isRequired("username")
-      // .isString("password").isRequired("password")
-      const {errors} = validation;
-      console.log(errors);
-      // dispatch(userLogin({ username, password }));
-    
-  };
+  const loginValidationSchema = yup.object().shape({
+    username:yup.string().required().min(2).max(20),
+    password:yup.string().required().min(5),
+  })
+  const {values,errors,touched,handleChange,handleBlur,handleSubmit,isSubmitting} = useFormik({
+    initialValues:{
+      username:"",
+      password:"",
+    },
+    validationSchema: loginValidationSchema,
+    onSubmit:(values,actions)=>{
+      dispatch(userLogin({username:values.username,password:values.password}));
+      actions.resetForm();
+    }
+  });
+  
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
     if (isLoggedIn) navigate("/dashboard");
-    return ()=>{
-      setFormState({});
-    }
   }, [isLoggedIn,navigate]);
-
+  console.log(errors,touched);
+  console.log(errors.username && touched.username)
   return (
     <section className="Login">
-      <form>
+      <form onSubmit={handleSubmit}>
         <Typography variant="h4" gutterBottom>
           Log in
         </Typography>
         <TextField
           variant="outlined"
+          label="Username"
           placeholder="Username"
-          type="text"
           name="username"
-          onChange={(e) => handleFormChange(e,setFormState)}
+          value={values.username}
+          onChange={handleChange}
+          onBlur={handleBlur}
           fullWidth
+          required
+          error={Boolean(errors.username && touched.username)}
+          helperText={touched.username ? errors.username : ""}
         />
+
         <TextField
           variant="outlined"
+          label="Password"
           placeholder="Password"
-          name="password"
           type="password"
-          onChange={(e) => handleFormChange(e,setFormState)}
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
           fullWidth
+          required
+          error={Boolean(errors.password && touched.password)}
+          helperText={touched.password ? errors.password : ""}
         />
         <section className="log-btn">
-          <Typography variant="subtitle1" gutterBottom>
-            Forgot Password?
-          </Typography>
-          <Button variant="outlined" onClick={handleLogin}>
-            Login
-          </Button>
+          <Typography variant="subtitle1" gutterBottom>Forgot Password?</Typography>
+          <Button variant="outlined" type="submit" disabled={isSubmitting}>Login</Button>
         </section>
         {/* This is gonna be divider */}
         <hr />

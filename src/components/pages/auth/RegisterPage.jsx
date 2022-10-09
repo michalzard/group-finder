@@ -1,60 +1,86 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Autocomplete, Button, createFilterOptions, TextField, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userRegister } from "../../redux/reducers/userReducers";
+import { userRegister } from "../../../redux/reducers/userReducers";
 import "./RegisterPage.scss";
+import * as yup from "yup";
+import { useFormik } from "formik";
+
+import Countries from "./countries.json";
 
 function RegisterPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [currentLocation,setLocation] = useState("");
-  const [email,setEmail] = useState("");
-  const [username,setUsername] = useState("");
-  const [password,setPassword] = useState("");
 
-  const handleRegistration=()=>{
-    dispatch(userRegister({email,username,password}));
-  }
   const isLoggedIn = useSelector((state)=>state.auth.isLoggedIn);
   useEffect(()=>{
   if(isLoggedIn) navigate("/dashboard");
-  },[isLoggedIn]);
+  },[isLoggedIn,navigate]);
+
+  const parseCountries=(countries)=>{
+    //expected format "AF" : "Afghanistan"
+    const countryCode = Object.keys(countries);
+    const countryName = Object.values(countries);
+    const countryArray =[];
+    for(let i=0;i<countryCode.length;i++){
+      countryArray.push({code:countryCode[i],label:countryName[i]});
+    }
+    return countryArray;
+  }
+
+
+  const registerValidationSchema = yup.object().shape({
+    email:yup.string().email("Enter valid email").required(),
+    username:yup.string().min(2).max(20).required(),
+    location:yup.string().notRequired(),
+    password:yup.string().required().min(5),
+    confirmPassword:yup.string().required().oneOf([yup.ref("password")],"Password need to match")
+  })
+  const {errors,values,touched,handleChange,handleBlur,handleSubmit,setFieldValue} = useFormik({
+    initialValues:{
+      email:"",
+      username:"",
+      location:"",
+      password:"",
+      confirmPassword:"",
+    },
+    validationSchema:registerValidationSchema,
+    onSubmit:(values,actions)=>{
+      actions.resetForm();
+      dispatch(userRegister({email:values.email,username:values.username,password:values.password}));
+    }
+  })
 
   return (
     <section className="Register">
-      <form>
+      <form onSubmit={handleSubmit}>
       <Typography variant="h4" gutterBottom>Register</Typography>
-        <TextField placeholder="Email" type="email" fullWidth onChange={(e)=>{setEmail(e.target.value);}}/>
-        <TextField placeholder="Username" type="text" fullWidth onChange={(e)=>{setUsername(e.target.value);}}/>
-        <FormControl fullWidth>
-        <InputLabel id="location-label">Locations</InputLabel>
-        <Select placeholder="locations" labelId="location-label" value={currentLocation} label="Locations" onChange={(e)=>setLocation(e.target.value)}>
-          <MenuItem value={1}>
-          Location 1
-          </MenuItem>
-          <MenuItem value={2}>
-          Location 2
-          </MenuItem>
-          <MenuItem value={3}>
-          Location 3
-          </MenuItem>
-          <MenuItem value={4}>
-          Location 4
-          </MenuItem>
-        </Select>
+        <TextField placeholder="Username" name="username" value={values.username} fullWidth onChange={handleChange} onBlur={handleBlur}
+        error={Boolean(errors.username && touched.username)} helperText={touched.username ? errors.username : ""}
+        />
 
-        </FormControl>
+        <TextField placeholder="Email" name="email" type="email" value={values.email} fullWidth onChange={handleChange} onBlur={handleBlur}
+        error={Boolean(errors.email && touched.email)} helperText={touched.email ? errors.email : ""}
+        />
+       
+        <Autocomplete
+        id="filter-location"
+        options={parseCountries(Countries).map(country=>country.label)}
+        filterOptions={createFilterOptions({matchFrom:"any",limit:252})}
+        renderInput={(params)=><TextField {...params} label="Select Country"/>}
+        onChange={(e,value)=>{setFieldValue("location",value);}}
+        />
 
-        <hr />
-
-        <TextField placeholder="Password" type="password" fullWidth onChange={(e)=>{setPassword(e.target.value);}} />
-        <TextField placeholder="Confirm Password" type="password" fullWidth />
+        <TextField placeholder="Password" name="password" type="password" fullWidth  value={values.password} onChange={handleChange} onBlur={handleBlur}
+        error={Boolean(errors.password && touched.password)} helperText={touched.password ? errors.password : ""}/>
+        <TextField placeholder="Confirm Password" name="confirmPassword" type="password" fullWidth value={values.confirmPassword} onChange={handleChange} onBlur={handleBlur}
+        error={Boolean(errors.confirmPassword && touched.confirmPassword)} helperText={touched.confirmPassword ? errors.confirmPassword : ""} />
         <section className="form-footer">
-          <Button variant="outlined" onClick={handleRegistration}>Register</Button>
-          <Typography variant="subtitle2" onClick={()=>{navigate("/login")}}>
-            Already have account? Login
-          </Typography>
+        <Button variant="outlined" type="submit">Register</Button>
+        <Typography variant="subtitle2" onClick={()=>{navigate("/login")}}>
+          Already have account? Login
+        </Typography>
         </section>
       </form>
     </section>

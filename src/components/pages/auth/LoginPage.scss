@@ -19,6 +19,9 @@
     padding: 25px;
     border-radius: 20px;
     width: 400px;
+    .MuiFormControl-root{
+      margin:5px 0;//space between inputs
+    }
     .log-btn {
       display: flex;
       justify-content: space-between;
@@ -31,6 +34,10 @@
     button {
       border: 1px solid $gradient-pink !important;
       color: $gradient-pink !important;
+    }
+    button:disabled{
+      border: 1px solid gray !important;
+      color:gray !important;
     }
     hr {
       width: 100%;
