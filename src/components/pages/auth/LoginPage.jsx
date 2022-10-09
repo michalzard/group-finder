@@ -4,21 +4,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../redux/reducers/userReducers";
 import "./LoginPage.scss";
+import {handleFormChange,FormValidator} from "../../formHelpers";
+
 
 function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const handleLogin = () => {
-    dispatch(userLogin({ username, password }));
+  const [formState,setFormState] = useState({username:"",password:""});
+
+
+
+  const handleLogin = async () => {
+      const validation = new FormValidator(formState).isString("username").minmax("username",3,5).isRequired("username")
+      // .isString("password").isRequired("password")
+      const {errors} = validation;
+      console.log(errors);
+      // dispatch(userLogin({ username, password }));
+    
   };
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   useEffect(() => {
     if (isLoggedIn) navigate("/dashboard");
+    return ()=>{
+      setFormState({});
+    }
   }, [isLoggedIn,navigate]);
 
   return (
@@ -31,14 +43,16 @@ function LoginPage() {
           variant="outlined"
           placeholder="Username"
           type="text"
-          onChange={(e) => setUsername(e.target.value)}
+          name="username"
+          onChange={(e) => handleFormChange(e,setFormState)}
           fullWidth
         />
         <TextField
           variant="outlined"
           placeholder="Password"
+          name="password"
           type="password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => handleFormChange(e,setFormState)}
           fullWidth
         />
         <section className="log-btn">
