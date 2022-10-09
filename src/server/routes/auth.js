@@ -24,7 +24,9 @@ router.post("/register", (req, res) => {
           res.status(200).send({ message: "User registered", user: doc });
         })
         .catch((err) => {
-          res.status(422).send({ message: "Unprocessable Entity", err:err.message });
+          const {message,code} = err;
+          if(code == 11000)res.status(400).send({ message: "This email is in use"});
+          else res.status(400).send({message});
         });
     } else {
       res.status(400).send({ message: "Bad Request" });
@@ -53,7 +55,7 @@ router.post("/login", async (req, res) => {
         }
         else res.status(401).send({message:"Username or password is incorrect"});
       } else {
-        res.status(404).send({ message: "Username or password is incorrect" });
+        res.status(401).send({ message: "Username or password is incorrect" });
       }
     } else {
       res.status(400).send({ message: "Bad Request" });

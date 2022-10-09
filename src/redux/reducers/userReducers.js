@@ -38,7 +38,7 @@ export const userRegister = createAsyncThunk(
   "Auth/Register",
   async ({email,username,password},thunkApi) =>{
     // return register logic
-    return await axios.post(`${API_URL}/auth/register`,{email,username,password})
+    return await axios.post(`${API_URL}/auth/register`,{email,username,password},{withCredentials:true})
     .then((data)=>{
       const {message,user} = data.data;
       console.log(data);

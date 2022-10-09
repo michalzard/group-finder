@@ -8,7 +8,7 @@ import GroupsLogo from "../assets/groups-logo.png";
 import MenuIcon from '@mui/icons-material/Menu';
 import "./Header.scss";
 import { useDispatch } from 'react-redux';
-import { userLogout } from './redux/reducers/userReducers';
+import { userLogout } from '../redux/reducers/userReducers';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import PersonIcon from '@mui/icons-material/Person';
 
