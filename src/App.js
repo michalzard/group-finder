@@ -5,7 +5,7 @@ import LandingPage from './components/pages/LandingPage';
 import LoginPage from './components/pages/auth/LoginPage';
 import RegisterPage from './components/pages/auth/RegisterPage';
 import { useDispatch, useSelector } from 'react-redux';
-import { userSession } from './components/redux/reducers/userReducers';
+import { userSession } from './redux/reducers/userReducers';
 import Dashboard from './components/pages/Dashboard';
 import Friends from './components/pages/Friends';
 import Discover from './components/pages/Discover';
@@ -25,9 +25,9 @@ function App() {
       <Route path="/dashboard" element={<Dashboard/>}/>
       <Route path="/discover" element={<Discover/>}/>
       <Route path="/friends" element={<Friends/>}>
-
       </Route>
-
+      
+      <Route path="*" element={<Navigate to="/dashboard"/>}/>
     </Routes>
   );
 }
