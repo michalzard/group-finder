@@ -39,7 +39,10 @@ app.use(express.urlencoded({extended:true}));//enables formdata/multiplart troug
 //Routes
 //
 const authRoute = require("./routes/auth");
+const friendsRoute = require("./routes/friends");
+
 app.use("/auth",authRoute)
+app.use("/friends",friendsRoute);
 
 
 app.use(express.static("src/assets"));//staticly served assets like pictures

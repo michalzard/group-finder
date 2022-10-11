@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const {v4} = require("uuid");
+const { v4 } = require("uuid");
 
 const userSchema = new mongoose.Schema(
   {
-    id:{
-      type:String,
-      default:v4(),
+    id: {
+      type: String,
+      default: v4(),
     },
     email: {
       type: String,
@@ -24,14 +24,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minLength: [3, "Username needs to be between 3-30 characters"],
-      maxLength: [30, "Username needs to be between 3-30 characters"],
+      minLength: [3, "Username must be atleast 3 characters"],
+      maxLength: [30, "Username must be at most 30 characters"],
     },
     password: {
       type: String,
       required: true,
       trim: true,
     },
+
+    friends:[{type:mongoose.Types.ObjectId,ref:"User"}],
   },
   { timestamps: true }
 );
@@ -59,6 +61,7 @@ userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   delete obj._id;
+  delete obj.updatedAt;
   return obj;
 };
 
