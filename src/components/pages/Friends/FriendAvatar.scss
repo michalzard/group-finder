@@ -1,0 +1,28 @@
+.friends-dm {
+  display: flex;
+  padding: 5px;
+  margin: 2px 0px;
+  width: 250px;
+
+  .dm-avatar {
+    margin-right: 10px;
+  }
+  .dm-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    span {
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.friends-dm:first-child {
+  margin-top: 10px;
+}

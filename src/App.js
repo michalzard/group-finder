@@ -7,7 +7,7 @@ import RegisterPage from './components/pages/auth/RegisterPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSession } from './redux/reducers/userReducers';
 import Dashboard from './components/pages/Dashboard';
-import Friends from './components/pages/Friends';
+import Friends from './components/pages/Friends/Friends';
 import Discover from './components/pages/Discover';
 
 function App() {

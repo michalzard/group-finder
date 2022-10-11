@@ -1,0 +1,39 @@
+@import "../../../Theme.scss";
+@import "../../../global.scss";
+
+.friends {
+  display: flex;
+  width: 100%;
+  height: $fullHeight-with-navbar;
+  color: white;
+  .dms {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: $surface;
+    overflow-y: scroll;
+    .dm-top {
+      margin: 15px 10px 0px 10px;
+      
+      color: lightgray;
+    }
+    .dm-top > h6:first-child {
+      margin-bottom: 40px;
+    }
+    h6 {
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: 10px;
+      }
+    }
+    button {
+      margin-bottom: 20px;
+      align-self: flex-start;
+    }
+    .dm-friend-avatars {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
