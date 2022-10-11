@@ -1,9 +1,11 @@
 @import "../../Theme.scss";
+@import "../../global.scss";
+
 .dashboard {
   display: flex;
   flex-direction: column;
   //62px is height os navbar
-  height: calc(100vh - 62px);
+  height: $fullHeight-with-navbar;
   color: white;
   align-items: center;
   padding: 50px;

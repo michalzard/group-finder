@@ -37,7 +37,7 @@ function RegisterPage() {
     password:yup.string().required().min(5),
     confirmPassword:yup.string().required().oneOf([yup.ref("password")],"Password need to match")
   })
-  const {errors,values,touched,handleChange,handleBlur,handleSubmit,setFieldValue} = useFormik({
+  const {errors,values,touched,handleChange,handleBlur,handleSubmit,isSubmitting,setFieldValue} = useFormik({
     initialValues:{
       email:"",
       username:"",
@@ -77,7 +77,7 @@ function RegisterPage() {
         <TextField placeholder="Confirm Password" name="confirmPassword" type="password" fullWidth value={values.confirmPassword} onChange={handleChange} onBlur={handleBlur}
         error={Boolean(errors.confirmPassword && touched.confirmPassword)} helperText={touched.confirmPassword ? errors.confirmPassword : ""} />
         <section className="form-footer">
-        <Button variant="outlined" type="submit">Register</Button>
+        <Button variant="outlined" disabled={isSubmitting} type="submit">Register</Button>
         <Typography variant="subtitle2" onClick={()=>{navigate("/login")}}>
           Already have account? Login
         </Typography>

@@ -84,7 +84,7 @@ function HeroSection() {
 function ConnectSection() {
   const navigate= useNavigate();
   return (
-    <section className="connect">
+    <div className="connect">
       <article>
         <section className="signup">
           <Typography variant="h3">
@@ -120,13 +120,13 @@ function ConnectSection() {
       <Button variant="outlined" onClick={()=>{navigate("signup")}} startIcon={<EditIcon />} size="large">
         Sign up
       </Button>
-    </section>
+    </div>
   );
 }
 
 function ExperienceSection() {
   return (
-    <section className="experience">
+    <div className="experience">
       <Typography variant="h3">The ultimate group finder experience</Typography>
       <Typography variant="h6" color="lightgray">
         Find like-minded groups of players based on your common interest.
@@ -145,13 +145,13 @@ function ExperienceSection() {
           <LanguageIcon />
         </section>
       </article>
-    </section>
+    </div>
   );
 }
 
 function ChatSection() {
   return (
-    <section className="chat-w-friends">
+    <div className="chat-w-friends">
       <section className="info">
         <Typography variant="h3">Chat with your new friends!</Typography>
         <Typography variant="subtitle1" color="lightgray" gutterBottom>
@@ -168,13 +168,13 @@ function ChatSection() {
         </Typography>
       </section>
       <img src={ChatExample} alt="Message players trough our chat system" />
-    </section>
+    </div>
   );
 }
 
 function ShareProfileSection() {
   return (
-    <section className="share-profile">
+    <div className="share-profile">
       <section className="info">
         <Typography variant="h3">
           <ShareIcon />
@@ -187,13 +187,13 @@ function ShareProfileSection() {
           anyone trough any media.
         </Typography>
       </section>
-    </section>
+    </div>
   );
 }
 
 function ProsAndConsSection() {
   return (
-    <section className="pros-cons">
+    <div className="pros-cons">
       <Typography variant="h3" gutterBottom>
         Pros & Cons
       </Typography>
@@ -220,7 +220,7 @@ function ProsAndConsSection() {
           <Con description={"playing with the wrong people."} />
         </section>
       </article>
-    </section>
+    </div>
   );
 }
 

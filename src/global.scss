@@ -11,3 +11,5 @@ html {
 * {
   box-sizing: border-box;
 }
+
+$fullHeight-with-navbar: calc(100vh - 62px);

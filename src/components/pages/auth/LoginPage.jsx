@@ -34,8 +34,7 @@ function LoginPage() {
   useEffect(() => {
     if (isLoggedIn) navigate("/dashboard");
   }, [isLoggedIn,navigate]);
-  console.log(errors,touched);
-  console.log(errors.username && touched.username)
+  
   return (
     <section className="Login">
       <form onSubmit={handleSubmit}>
