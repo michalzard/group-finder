@@ -1,23 +1,21 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Header from '../../Header';
 import "../Friends/Friends.scss";
 import GroupIcon from '@mui/icons-material/Group';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import FriendAvatar from "./FriendAvatar";
 import ForumIcon from '@mui/icons-material/Forum';
-
+import FriendStatus from './FriendStatus';
 
 
 function Friends() {
-  useEffect(()=>{
-    //load requests
-  },[])
+  
   const fakeFriendList = Array(200).fill("fake");
-  const svgsize = {width:20,height:20};
+  const svgsize = {width:22,height:20};
   return (
     <>
     <Header/>
-    <div className="friends">
+    <main className="friends">
     <section className="dms">
     {/* Icon, name, status(online/offline) */}
     <div className="dm-top">
@@ -26,20 +24,21 @@ function Friends() {
     </div>
 
     <div className="dm-friend-avatars">
+ 
     {
       fakeFriendList.map((friend,i)=><FriendAvatar key={i}/>)
     }
+    
     </div>
     {/* nav bar on top =>  icon Friends Online All Pending Blocked Add Friend Button  */}
     </section>
     
-    <section className="chat">
-
+    {/* friends status and chat will be displayed here */}
+    <section className="dm-content">
+    <FriendStatus/>
     </section>
-    <section className="gprofile">
       {/* Possibly will place game profile here for people to copy discord stuff or  */}
-    </section>
-    </div>
+    </main>
     </>
   )
 }

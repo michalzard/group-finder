@@ -3,9 +3,9 @@
 
 .friends {
   display: flex;
-  width: 100%;
   height: $fullHeight-with-navbar;
   color: white;
+  flex:1;
   .dms {
     display: flex;
     flex-direction: column;
@@ -35,5 +35,9 @@
       display: flex;
       flex-direction: column;
     }
+  }
+  .dm-content{
+    display:flex;
+    flex:1;
   }
 }

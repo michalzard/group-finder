@@ -1,0 +1,40 @@
+@import "../../../Theme.scss";
+
+$padding-onsides: 20px;
+
+.friend-status {
+  flex: 1; // strech
+  background-color: $surface;
+
+  .friend-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-bottom: 2px solid black;
+    button {
+      margin: 15px 0px;
+    }
+    button:not(:last-child) {
+      padding: 5px $padding-onsides;
+      color: lightgray;
+    }
+    button:not(:last-child):hover {
+      background-color: $surface-highlight;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      margin-right: 30px;
+      svg {
+        margin-right: 10px;
+      }
+    }
+  }
+  .selected {
+    background-color: $surface-highlight;
+    border-radius: 5px;
+    padding-left: $padding-onsides;
+    padding-right: $padding-onsides;
+  }
+}

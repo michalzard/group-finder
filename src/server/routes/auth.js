@@ -67,14 +67,14 @@ router.post("/login", async (req, res) => {
 
 router.get("/logout", async (req, res) => {
   try{
+    if(req.headers.cookie){
     const cookie = parseCookie(req.headers.cookie);
-    if(cookie.session_id){
     //clear cookie there removing session on client side and delete session from db
     const deletedSession=await deleteSession(cookie.session_id);
     res.clearCookie("session_id");
     if(deletedSession) res.status(200).send({message:"User logged out"});
     else res.status(200).send({message:"Session expired"});
-    }
+    }else res.status(200).send({message:"Session expired"});
   }catch(err){
     res.status(500).send(err.message);
   }
