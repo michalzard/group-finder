@@ -10,6 +10,7 @@ import Dashboard from './components/pages/Dashboard';
 import Friends from './components/pages/Friends/Friends';
 import Chat from "./components/pages/Friends/Chat";
 import Discover from './components/pages/Discover';
+import FriendStatus from './components/pages/Friends/FriendStatus';
 
 
 
@@ -28,8 +29,12 @@ function App() {
 
       <Route path="/dashboard" element={<Dashboard/>}/>
       <Route path="/discover" element={<Discover/>}/>
+
       <Route path="/friends" element={<Friends/>}>
+        
+      <Route path=":display" element={<FriendStatus/>}/>
       <Route path="dm/:id" element={<Chat/>}/>
+
       </Route>
       
       <Route path="*" element={<Navigate to="/dashboard"/>}/>

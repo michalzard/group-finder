@@ -3,6 +3,8 @@
 $padding-onsides: 20px;
 
 .friend-status {
+  display:flex;
+  flex-direction: column;
   flex: 1; // strech
   background-color: $surface;
 
@@ -31,10 +33,32 @@ $padding-onsides: 20px;
       }
     }
   }
+
+  .friends-by-status{
+    margin:20px;
+    margin-bottom: 0px;
+    display:flex;
+    flex-direction: column;
+    flex:1;
+    .requests{
+      overflow-y: scroll;
+      display:flex;
+      flex-direction: column;
+      flex:1;
+    }
+    hr{
+      width: 100%;
+      border-color:gray;
+    }
+  }
+  .friend-request{
+    border-radius: 5px;
+  }
   .selected {
     background-color: $surface-highlight;
     border-radius: 5px;
     padding-left: $padding-onsides;
     padding-right: $padding-onsides;
   }
+
 }

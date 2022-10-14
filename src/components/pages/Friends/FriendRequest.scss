@@ -1,0 +1,39 @@
+.friend,.friend-request {
+  display: flex;
+  padding: 5px;
+  margin: 5px 0px;
+  width: 100%;
+  color:white;
+
+  .friend-user {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    span {
+      line-height: 1.35;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .friend-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    svg {
+      margin: 0px 5px;
+      font-size: 25px;
+      cursor: pointer;
+    }
+    .redX {
+      color: red;
+    }
+  }
+}
+
+.friend-link{
+  text-decoration: none;
+}

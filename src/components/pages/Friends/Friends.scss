@@ -12,10 +12,17 @@
     padding: 10px;
     background-color: $surface;
     overflow-y: scroll;
+    flex:.2;
     .dm-top {
       margin: 15px 10px 0px 10px;
-      
       color: lightgray;
+      h6:first-child{
+        cursor: pointer;
+      }
+      .selected{
+        background-color:$surface-highlight;
+
+      }
     }
     .dm-top > h6:first-child {
       margin-bottom: 40px;

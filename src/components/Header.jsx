@@ -21,7 +21,7 @@ function Header() {
     <section className='nav'>
     <Link to="/dashboard"><HomeIcon/></Link>
     <Link to="/discover"><SearchIcon/> <Typography>Discover</Typography></Link>
-    <Link to="/friends"><GroupIcon/> <Typography>Friends</Typography></Link>
+    <Link to="/friends/all"><GroupIcon/> <Typography>Friends</Typography></Link>
     </section>
     <section className="logo">
     <img src={GroupsLogo} alt="Groups Logo"/>
