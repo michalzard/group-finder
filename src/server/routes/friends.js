@@ -8,7 +8,23 @@ const {parseCookie,checkForSession}  = require("../utils");
 // POST -> request -> pending state , send info to recipient
 // POST -> accept -> accepted state,remove request object , send info to requester
 // POST -> block -> blocked state,remove request object, hold id in blocked array 
-// DELETE -> decline ->declined state,remove request object
+
+router.get("/",async (req,res)=>{
+try{
+    const cookie = parseCookie(req.headers.cookie);
+    if(cookie){
+        const session = await checkForSession(cookie.session_id);
+        const {user_id} = session.session;
+        const {friends} = await User.findById(user_id).populate("friends",{friends:0});//dont load friends of your friends
+        if(friends) res.status(200).send({message:"Friend list",friends});
+        else res.status(404).send({message:"Unable to load friend list"});
+    }else{
+        res.status(401).send({message:"Unauthorized"});
+    }
+    }catch(err){
+    res.status(500).send(err);
+    }
+})
 
 
 router.get("/requests",async (req,res)=>{
@@ -76,19 +92,31 @@ router.post("/request", async (req,res)=>{
     }       
 })
 
-router.post("/accept",async(req,res)=>{
- try{
+router.patch("/accept",async(req,res)=>{
+    try{
     const cookie = parseCookie(req.headers.cookie);
+    const {requesterId} = req.body;
     if(cookie){
         const session = await checkForSession(cookie.session_id);
         const {user_id} = session.session;
-
+            const requester = await User.findOne({id:requesterId});
+            const recipient = await User.findById(user_id);
+            const friendRequest = await FriendRequest.findOne({recipient:user_id,requester:requester._id,status:"pending"}).populate("recipient").populate("requester");
+            if(friendRequest){
+                const accepted = recipient.acceptFriend(requester._id);
+                friendRequest.status = "accepted";
+                friendRequest.save();
+                if(accepted) res.status(200).send({message:"Friend request accepted"});
+                else res.status(200).send({message:"Friend request already accepted"});
+            }else{
+                res.status(200).send({message:"Friend request no longer pending"});
+            }            
     }else{
-        res.status(400).send({message:"Bad Request"});
+        res.status(401).send({message:"Unauthorized"});
     }
- }catch(err){
+    }catch(err){
     res.status(500).send(err);
- }
+    }
 });
 
 router.post("/decline",(req,res)=>{

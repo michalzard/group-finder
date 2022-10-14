@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
     },
 
     friends:[{type:mongoose.Types.ObjectId,ref:"User"}],
+    // blocked:[{type:mongoose.Types.ObjectId,ref:"User"}],
   },
   { timestamps: true }
 );
@@ -64,5 +65,15 @@ userSchema.methods.toJSON = function () {
   delete obj.updatedAt;
   return obj;
 };
+
+userSchema.methods.acceptFriend = function (requesterId) {
+  if(!this.friends.includes(requesterId)){
+    this.friends.push(requesterId);
+    this.save();
+    return true;
+  }else{
+    return false;
+  }
+}
 
 module.exports = mongoose.model("User", userSchema);
