@@ -64,12 +64,15 @@ router.get("/requests",async (req,res)=>{
 router.post("/request", async (req,res)=>{
     try{  
         const cookie = parseCookie(req.headers.cookie);
-        const { recipientId } = req.body;
+        const { username } = req.body;
         if(cookie){
             const session = await checkForSession(cookie.session_id);
             const {user_id} = session.session;
-            if(recipientId){
-            const recipient = await User.findOne({id:recipientId});
+            if(username){
+            const recipient = await User.findOne({username});
+            if(!recipient){
+                return res.status(404).send({message:"Seems like this user doesn't exist"});
+            }
             const frExists = await FriendRequest.findOne({requester:user_id,recipient:recipient._id});
             if(frExists){
                 res.status(200).send({message:`Friend request for ${recipient.username} is already pending`});
@@ -78,8 +81,10 @@ router.post("/request", async (req,res)=>{
                 requester:user_id,
                 recipient:recipient._id,
             });
-            sentPendingFR.save();
-            res.status(200).send({message:`Friend request sent to ${recipient.username}`});
+            if(sentPendingFR){
+                sentPendingFR.save();
+                res.status(200).send({message:`Your friend request was sent to ${recipient.username}`});
+            }else res.status(404).send({message:`Unable to send friend request to ${recipient.username}`});
         }
         }else{
             res.status(400).send({message:"Bad Request"});
@@ -88,6 +93,7 @@ router.post("/request", async (req,res)=>{
             res.status(401).send({message:"Unauthorized"});
         }
     }catch(err){
+        console.log(err);
         res.status(500).send(err);
     }       
 })
@@ -119,9 +125,16 @@ router.patch("/accept",async(req,res)=>{
     }
 });
 
-router.post("/decline",(req,res)=>{
+router.post("/decline",async (req,res)=>{
 try{
-
+    const cookie = parseCookie(req.headers.cookie);
+    const {requesterId} = req.body;
+    if(cookie){
+        const session = await checkForSession(cookie.session_id);
+        const {user_id} = session.session;
+    }else{
+        res.status(401).send({message:"Unauthorized"});
+    }
 }catch(err){
 res.status(500).send(err);
 }

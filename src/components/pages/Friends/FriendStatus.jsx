@@ -1,18 +1,29 @@
 import React, { useEffect } from "react";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import { Button, CircularProgress, LinearProgress, TextField, Typography } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import "./FriendStatus.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { PendingFriendsRequests } from "../../../redux/reducers/friendsReducers";
+import { AddFriend, LoadAllFriends, PendingFriendsRequests } from "../../../redux/reducers/friendsReducers";
 import FriendRequest from "./FriendRequest";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import FriendDms from "./FriendDms";
+import {store} from "../../../redux/store";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
 
 function FriendStatus() {
   const {display} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
+    const {success} = store.getState().friends;
+    if(success===""){
+    dispatch(LoadAllFriends());
     dispatch(PendingFriendsRequests());
+    }
+
   }, [dispatch]);
 
 
@@ -22,6 +33,7 @@ function FriendStatus() {
        case "online" : return <OnlineFriends/>
        case "pending" : return  <AllPendingRequests/>
        case "blocked" : return <BlockedFriends/>
+       case "add" : return <AddFriendField/>
        default : return <AllFriends/>
     }
   }
@@ -37,7 +49,7 @@ function FriendStatus() {
         <Button variant="text" color="inherit" className={isSelected("online")} onClick={()=>{navigate("/friends/online")}}>Online</Button>
         <Button variant="text" color="inherit" className={isSelected("pending")} onClick={()=>{navigate("/friends/pending")}}>Pending</Button>
         <Button variant="text" color="inherit" className={isSelected("blocked")} onClick={()=>{navigate("/friends/blocked")}}>Blocked</Button>
-        <Button variant="contained" color="success">Add Friend</Button>
+        <Button variant="contained" color="success" onClick={()=>{navigate("/friends/add")}}>Add Friend</Button>
       </nav>
       <section className="friends-by-status">
        {
@@ -51,8 +63,21 @@ function FriendStatus() {
 export default FriendStatus;
 
 function AllFriends(){
+  const {list,loading} = useSelector(state=>state.friends);
   return(
-    <Typography>All Friends</Typography>
+    <>
+    {
+    loading ? <LinearProgress/> :
+    <>
+    <Typography variant="subtitle2" color="lightgray">All Friends - {list.length}</Typography>
+    <hr/>
+    {
+      list.map(friend=>{return <FriendDms key={friend.id} username={friend.username} bio={friend.bio}/>})
+    }
+    </>
+    }
+    
+    </>
   )
 }
 
@@ -76,14 +101,67 @@ function AllPendingRequests(){
 }
 
 function OnlineFriends(){
+  const {list,loading} = useSelector(state=>state.friends);
+  //filter out list to only display online status after its added
   return(
-    <Typography>Online Friends</Typography>
+    <>
+    {
+    loading ? <LinearProgress/> :
+    <>
+    <Typography variant="subtitle2" color="lightgray">Online Friends - {list.length}</Typography>
+    <hr/>
+    {
+      list.map(friend=>{return <FriendDms key={friend.id} username={friend.username} bio={friend.bio}/>})
+    }
+    </>
+    }
+    
+    </>
 
   )
 }
 
 function BlockedFriends(){
   return(
+    <>
     <Typography>Blocked Friends</Typography>
+    WIP
+    </>
+    )
+}
+
+function AddFriendField(){
+  const wField = {style:{color:"white"}};
+  const dispatch = useDispatch();
+  const addFriendValidation = yup.object().shape({
+  friendName:yup.string()
+  .required("Please enter friend's username")
+  .min(2,"Usernames are atleast 2 characters long")
+  .max(20,"Usernames cannot be longer than 20 characters long")
+  .trim(),
+  });
+  const {values,errors,handleBlur,handleChange,isSubmitting,handleSubmit} = useFormik({
+    initialValues:{
+      friendName:"",
+    },
+    validationSchema:addFriendValidation,
+    onSubmit:(values,actions)=>{
+      dispatch(AddFriend({username:values.friendName}));
+      actions.resetForm();
+    }
+  })
+
+  const {success,error} = useSelector(state=>state.friends);
+  return(
+    <form onSubmit={handleSubmit} className="send-friend-request">
+    <TextField value={values.friendName} name="friendName" onChange={handleChange} onBlur={handleBlur} inputProps={wField} fullWidth
+    error={Boolean(errors.friendName)} helperText={errors.friendName ? errors.friendName : ""} placeholder="Enter friend's username"
+    InputProps={{endAdornment:<Button type="submit" variant="contained" disabled={isSubmitting}>Send Friend Request</Button>}}
+    />
+      <Typography variant="caption">{success.includes("already pending") ? 
+      <Link to="/friends/pending" style={{color:"yellowgreen"}}>{success}</Link> : success }</Typography>
+      <Typography variant="caption" color="red">{error}</Typography>
+
+    </form>
   )
 }
