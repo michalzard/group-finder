@@ -43,6 +43,7 @@ const authSlice = createSlice({
     },
     [userSession.rejected]: (state, action) => {
       state.loading = false;
+      state.isLoggedIn = false;
       state.error = action.payload;
       state.success = "";
     },
