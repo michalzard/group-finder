@@ -9,18 +9,29 @@ import FriendStatus from './FriendStatus';
 import FriendDms from './FriendDms';
 import { useNavigate, useParams } from 'react-router-dom';
 import {io} from "socket.io-client";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Chat from './Chat';
+import { LoadAllFriends, PendingFriendsRequests } from '../../../redux/reducers/friendsReducers';
 
 function Friends() {
   //Id will be used to determine which dms to open and which person's chat opens
+  const svgsize = {width:22,height:20};
   const {id} = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
   const [socket,setSocket] = useState(null);
-
-  const svgsize = {width:22,height:20};
-
   const friendList = useSelector(state=>state.friends.list);
+  const {success} = useSelector(state=>state.friends);
+
+  useEffect(() => {
+    //no success message => load whole friend state
+    if(success===""){
+    dispatch(LoadAllFriends());
+    dispatch(PendingFriendsRequests());
+    }
+
+  }, [dispatch,success]);
 
   useEffect(()=>{
     const newSocket = io(`${process.env.REACT_APP_GATEWAY_URL}`);
@@ -43,7 +54,7 @@ function Friends() {
     <div className="dm-friend-avatars">
  
     {
-      friendList.map((friend,i)=>{return <FriendDms key={i} username={friend.username}/>})
+      friendList.map((friend)=>{return <FriendDms key={friend.id} id={friend.id} username={friend.username}/>})
     }
     
     </div>

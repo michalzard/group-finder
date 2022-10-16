@@ -2,10 +2,13 @@ import React from "react";
 import "./FriendRequest.scss";
 import { Avatar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setFriendChatId } from "../../../redux/slices/friendsSlice";
 
 function FriendDms({ username, bio, id }) {
+  const dispatch= useDispatch();
   return (
-    <Link to="dm/id" className="friend-link">
+    <Link to={`dm/${id}`} className="friend-link" onClick={()=>{dispatch(setFriendChatId({id}))}}>
       <div className="friend">
         <section>
           <Avatar sx={{ width: 30, height: 30, marginRight: "10px" }} />

@@ -3,29 +3,17 @@ import { Alert, Button, CircularProgress, LinearProgress, Snackbar, TextField, T
 import GroupIcon from "@mui/icons-material/Group";
 import "./FriendStatus.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { AddFriend, LoadAllFriends, PendingFriendsRequests } from "../../../redux/reducers/friendsReducers";
+import { AddFriend } from "../../../redux/reducers/friendsReducers";
 import FriendRequest from "./FriendRequest";
 import { useNavigate, useParams } from "react-router-dom";
 import FriendDms from "./FriendDms";
-import {store} from "../../../redux/store";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 
 function FriendStatus() {
   const {display} = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const {success} = store.getState().friends;
-    if(success===""){
-    dispatch(LoadAllFriends());
-    dispatch(PendingFriendsRequests());
-    }
-
-  }, [dispatch]);
-
 
   const renderStatus = (display)=>{
     switch(display){
@@ -72,7 +60,7 @@ function AllFriends(){
     <Typography variant="subtitle2" color="lightgray">All Friends - {list.length}</Typography>
     <hr/>
     {
-      list.map(friend=>{return <FriendDms key={friend.id} username={friend.username} bio={friend.bio}/>})
+      list.map(friend=>{return <FriendDms key={friend.id} id={friend.id} username={friend.username} bio={friend.bio}/>})
     }
     </>
     }

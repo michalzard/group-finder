@@ -15,6 +15,14 @@ const friendsSlice = createSlice({
     loading: false,
     error: "",
     success: "",
+    friendChatId:"",
+  },
+  reducers:{
+    setFriendChatId:(state,action)=>{
+      const {id} = action.payload;
+      //get id check friend list and grab frend object to this state
+      state.friendChatId = id;
+    }
   },
   extraReducers: {
     //Friend requests
@@ -95,5 +103,7 @@ const friendsSlice = createSlice({
     }
   },
 });
+
+export const {setFriendChatId} = friendsSlice.actions;
 
 export default friendsSlice.reducer;
