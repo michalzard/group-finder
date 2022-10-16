@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { Button, CircularProgress, LinearProgress, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, CircularProgress, LinearProgress, Snackbar, TextField, Typography } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import "./FriendStatus.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { AddFriend, LoadAllFriends, PendingFriendsRequests } from "../../../redux/reducers/friendsReducers";
 import FriendRequest from "./FriendRequest";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FriendDms from "./FriendDms";
 import {store} from "../../../redux/store";
 import { useFormik } from "formik";
@@ -152,15 +152,39 @@ function AddFriendField(){
   })
 
   const {success,error} = useSelector(state=>state.friends);
+  const [errorOpen,setErrorOpen] = useState(false);
+  const [successOpen,setSuccessOpen] = useState(false);
+  useEffect(()=>{
+    //update state for error/success since i have to use state to manually change to false
+    // for snackbar to call onClose after autoHideDuration
+    setErrorOpen(Boolean(error));
+    setSuccessOpen(Boolean(success));
+  },[error,success]);
+
   return(
     <form onSubmit={handleSubmit} className="send-friend-request">
     <TextField value={values.friendName} name="friendName" onChange={handleChange} onBlur={handleBlur} inputProps={wField} fullWidth
     error={Boolean(errors.friendName)} helperText={errors.friendName ? errors.friendName : ""} placeholder="Enter friend's username"
     InputProps={{endAdornment:<Button type="submit" variant="contained" disabled={isSubmitting}>Send Friend Request</Button>}}
     />
-      <Typography variant="caption">{success.includes("already pending") ? 
-      <Link to="/friends/pending" style={{color:"yellowgreen"}}>{success}</Link> : success }</Typography>
-      <Typography variant="caption" color="red">{error}</Typography>
+      <Snackbar
+        open={errorOpen}
+        onClose={()=>{setErrorOpen(false)}}
+        autoHideDuration={5000}//closes automatically after 5 seconds
+        anchorOrigin={{vertical:"bottom",horizontal:"right"}}
+      >
+      <Alert severity="error" variant="filled">{error}</Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={successOpen}
+        onClose={()=>{setSuccessOpen(false)}}
+        autoHideDuration={5000}//closes automatically after 5 seconds
+        anchorOrigin={{vertical:"bottom",horizontal:"right"}}
+      >
+      <Alert severity="success" variant="filled">{success}</Alert>
+      </Snackbar>
+
 
     </form>
   )

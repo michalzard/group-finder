@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../../Header';
 import "../Friends/Friends.scss";
 import GroupIcon from '@mui/icons-material/Group';
@@ -8,15 +8,26 @@ import ForumIcon from '@mui/icons-material/Forum';
 import FriendStatus from './FriendStatus';
 import FriendDms from './FriendDms';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import {io} from "socket.io-client";
+import { useSelector } from 'react-redux';
+import Chat from './Chat';
 
 function Friends() {
   //Id will be used to determine which dms to open and which person's chat opens
   const {id} = useParams();
   const navigate = useNavigate();
+  const [socket,setSocket] = useState(null);
 
-  const fakeFriendList = Array(200).fill("fake");
   const svgsize = {width:22,height:20};
+
+  const friendList = useSelector(state=>state.friends.list);
+
+  useEffect(()=>{
+    const newSocket = io(`${process.env.REACT_APP_GATEWAY_URL}`);
+    setSocket(newSocket);
+    newSocket.on("connection",(data)=>{console.log(data)});
+    return ()=> newSocket.disconnect();
+  },[]);
 
   return (
     <>
@@ -32,7 +43,7 @@ function Friends() {
     <div className="dm-friend-avatars">
  
     {
-      fakeFriendList.map((friend,i)=>{return <FriendDms key={i} username={"Fake Friend"}/>})
+      friendList.map((friend,i)=>{return <FriendDms key={i} username={friend.username}/>})
     }
     
     </div>
@@ -42,9 +53,7 @@ function Friends() {
     {/* friends status and chat will be displayed here */}
     <section className="dm-content">
       {
-        id ? <Typography variant="h2" >Chat {id}</Typography>
-        : <FriendStatus/>
-    
+        id ? <Chat socket={socket} /> : <FriendStatus/>
       }
     </section>
       {/* Possibly will place game profile here for people to copy discord stuff or  */}

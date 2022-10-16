@@ -23,7 +23,6 @@ $padding-onsides: 20px;
     button:not(:last-child):hover {
       background-color: $surface-highlight;
     }
-
     .title {
       display: flex;
       align-items: center;
@@ -63,7 +62,8 @@ $padding-onsides: 20px;
 
   .send-friend-request{
     button{
-      width: 250px;//to fit whole send friend request
+      width: 250px;//to fit whole send friend request text
+      background-color: $gradient-pink;
     }
   }
 }
