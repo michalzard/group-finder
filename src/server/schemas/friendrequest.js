@@ -21,6 +21,15 @@ const friendRequestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//methods -> accept,decline
+friendRequestSchema.methods.accept = function (){
+  if(this.status !== "accepted"){this.status = "accepted"; return true}
+  return false;
+}
+
+friendRequestSchema.methods.decline = function (){
+  if(this.status !== "declined"){this.status = "declined"; return true}
+  return false;
+}
+
 
 module.exports = mongoose.model("FriendRequest", friendRequestSchema);
