@@ -1,36 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import "./global.scss";
 import {Routes,Route, Navigate} from "react-router-dom";
-import LandingPage from './components/pages/LandingPage';
-import LoginPage from './components/pages/auth/LoginPage';
-import RegisterPage from './components/pages/auth/RegisterPage';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSession } from './redux/reducers/userReducers';
-import Dashboard from './components/pages/Dashboard';
-import Friends from './components/pages/Friends/Friends';
-import Chat from "./components/pages/Friends/Chat";
-import Discover from './components/pages/Discover';
-import FriendStatus from './components/pages/Friends/FriendStatus';
+import { LinearProgress } from '@mui/material';
 
+const LandingPage = lazy(()=>import('./components/pages/LandingPage'));
+const LoginPage = lazy(()=>import('./components/pages/auth/LoginPage'));
+const RegisterPage = lazy(()=>import('./components/pages/auth/RegisterPage'));
+const Dashboard =lazy(()=>import('./components/pages/Dashboard'));
+const Friends =lazy(()=>import('./components/pages/Friends/Friends'));
+const Chat =lazy(()=>import('./components/pages/Friends/Chat'));
+const FriendStatus =lazy(()=>import('./components/pages/Friends/FriendStatus'));
+const Discover =lazy(()=>import('./components/pages/Discover'));
 
 
 
 function App() {
   const dispatch = useDispatch();
+  const {isLoggedIn,loading} = useSelector(state=>state.auth);
+
   useEffect(()=>{
     dispatch(userSession());
   },[dispatch]);
-  const isLoggedIn = useSelector(state=>state.auth.isLoggedIn);
+
   return (
+  <Suspense fallback={<LinearProgress/>}>
     <Routes>
-      <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard"/> : <LandingPage/>}/>
+      <Route path="/" element={isLoggedIn && !loading ? <Navigate to="/dashboard"/> : <LandingPage/>}/>
       <Route path="/login" element={<LoginPage/>} />
       <Route path="/register" element={<RegisterPage/>}/>
 
-      <Route path="/dashboard" element={<Dashboard/>}/>
-      <Route path="/discover" element={<Discover/>}/>
+      <Route path="/dashboard" element={!isLoggedIn && !loading ? <Navigate to="/"/> :  <Dashboard/>}/>
+      <Route path="/discover" element={!isLoggedIn && !loading ? <Navigate to="/"/> : <Discover/>}/>
 
-      <Route path="/friends" element={<Friends/>}>
+      <Route path="/friends" element={!isLoggedIn && !loading ? <Navigate to="/"/> : <Friends/>}>
         
       <Route path=":display" element={<FriendStatus/>}/>
       <Route path="dm/:id" element={<Chat/>}/>
@@ -39,6 +43,7 @@ function App() {
       
       <Route path="*" element={<Navigate to="/dashboard"/>}/>
     </Routes>
+  </Suspense>
   );
 }
 

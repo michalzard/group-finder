@@ -1,7 +1,6 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 import Header from "../Header";
 import "./Dashboard.scss";
 import {ReactComponent as DiscordLogo} from "../../assets/discord-icon.svg";
@@ -9,14 +8,10 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BuildIcon from '@mui/icons-material/Build';
 
 
-
 function Dashboard() {
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const user = useSelector((state)=>state.auth.user);
+  const {user} = useSelector((state)=>state.auth);
   return (
     <>
-      {isLoggedIn ? 
-        <>
           <Header />
           <main className="dashboard">
           
@@ -65,9 +60,6 @@ function Dashboard() {
           
           </article>
           </main>
-        </>
-       : <Navigate to="/" />
-      }
     </>
   );
 }
