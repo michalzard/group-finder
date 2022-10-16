@@ -23,6 +23,8 @@
     "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "sass": "^1.49.9",
+    "socket.io": "^4.5.3",
+    "socket.io-client": "^4.5.3",
     "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
@@ -30,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "server": "node ./src/server/server.js",
-    "server-dev": "nodemon ./src/server/server.js"
+    "server-dev": "nodemon ./src/server/server.js",
+    "gateway": "node ./src/socket-gateway/gateway.js",
+    "gateway-dev": "nodemon ./src/socket-gateway/gateway.js"
   },
   "eslintConfig": {
     "extends": [
