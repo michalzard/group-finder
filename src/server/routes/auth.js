@@ -85,6 +85,7 @@ router.get("/session",async (req,res)=>{
     if(req.headers.cookie){
     const cookie = parseCookie(req.headers.cookie);
     const sessionObject = await checkForSession(cookie.session_id);
+    if(!sessionObject) return res.status(401).send({message:"Unauthorized"});
     const {user_id} = sessionObject.session;
     const foundUser = await User.findById(user_id);
     if(foundUser){
