@@ -4,15 +4,21 @@ import "./FriendRequest.scss";
 
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useDispatch } from "react-redux";
+import { AcceptFriendRequest, CancelFriendRequest, DeclineFriendRequest } from "../../../redux/reducers/friendsReducers";
 
 function FriendRequest({type,request}) {
-  
+  const dispatch = useDispatch();
+
   const acceptRequest = ()=>{
-    console.log("Friend Request Accepted");
+    dispatch(AcceptFriendRequest({requesterId:request.requester.id}))
   }
 
   const declineRequest = () =>{
-    console.log("Friend Request Declined");
+    dispatch(DeclineFriendRequest({requesterId:request.requester.id}));
+  }
+  const cancelOutgoingRequest = () =>{
+    dispatch(CancelFriendRequest({recipientId:request.recipient.id}));
   }
 
   if(!request) return;
@@ -25,12 +31,12 @@ function FriendRequest({type,request}) {
 
       <section className="friend-user">
         <Typography variant="subtitle2" component="span"> {type === "pending" ? request.requester.username : request.recipient.username}</Typography>
-        <Typography variant="caption" color="lightgray"> {type === "pending" ? "Pending Friend Request" : "Ongoing Friend Request"}</Typography>
+        <Typography variant="caption" color="lightgray"> {type === "pending" ? "Pending Friend Request" : "Outgoing Friend Request"}</Typography>
       </section>
       {request ? <section className="friend-actions"> 
       {
         type === "pending" ? <> <CheckIcon sx={{color:"greenyellow"}} onClick={acceptRequest} /> <ClearIcon className="redX" onClick={declineRequest}/> </> 
-        : <ClearIcon className="redX" onClick={declineRequest}/> 
+        : <ClearIcon className="redX" onClick={cancelOutgoingRequest}/> 
       }
       
       </section> : null}

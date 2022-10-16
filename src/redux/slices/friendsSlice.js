@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  AcceptFriendRequest,
   AddFriend,
+  DeclineFriendRequest,
   LoadAllFriends,
   PendingFriendsRequests,
 } from "../reducers/friendsReducers";
@@ -61,6 +63,36 @@ const friendsSlice = createSlice({
       state.error = action.payload;
       state.success = "";
     },
+    //Accept Friend Request
+    [AcceptFriendRequest.pending]: (state) =>{
+      state.loading = true;
+    },
+    [AcceptFriendRequest.fulfilled]: (state,action) =>{
+      state.loading=false;
+      state.error="";
+      state.success = action.payload;
+      //TODO:return a friend object ???
+    },
+    [AcceptFriendRequest.rejected]: (state,action) =>{
+      state.loading=false;
+      state.error=action.payload;
+      state.success = "";
+    },
+    //Decline Friend Request
+    [DeclineFriendRequest.pending]: (state) =>{
+      state.loading = true;
+    },
+    [DeclineFriendRequest.fulfilled]: (state,action) =>{
+      state.loading=false;
+      state.error="";
+      state.success = action.payload;
+      //TODO:return a friend object ???
+    },
+    [DeclineFriendRequest.rejected]: (state,action) =>{
+      state.loading=false;
+      state.error=action.payload;
+      state.success = "";
+    }
   },
 });
 
