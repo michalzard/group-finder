@@ -23,7 +23,7 @@ function Friends() {
   const [socket,setSocket] = useState(null);
   const friendList = useSelector(state=>state.friends.list);
   const {success} = useSelector(state=>state.friends);
-
+  const user = useSelector(state=>state.auth.user);
   useEffect(() => {
     //no success message => load whole friend state
     if(success===""){
@@ -34,11 +34,11 @@ function Friends() {
   }, [dispatch,success]);
 
   useEffect(()=>{
-    const newSocket = io(`${process.env.REACT_APP_GATEWAY_URL}`);
-    setSocket(newSocket);
-    newSocket.on("connection",(data)=>{console.log(data)});
-    return ()=> newSocket.disconnect();
-  },[]);
+    const socket = io(`${process.env.REACT_APP_GATEWAY_URL}`,{auth:user});
+    setSocket(socket);
+
+    return ()=> socket.disconnect();
+  },[user]);
 
   return (
     <>
@@ -54,7 +54,7 @@ function Friends() {
     <div className="dm-friend-avatars">
  
     {
-      friendList.map((friend)=>{return <FriendDms key={friend.id} id={friend.id} username={friend.username}/>})
+      friendList.map((friend)=>{return <FriendDms key={friend.id} friend={friend}/>})
     }
     
     </div>
