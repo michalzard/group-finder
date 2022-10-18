@@ -1,6 +1,92 @@
 @import "../../../Theme.scss";
 
-.private-chat{
-    flex:1;
-    background-color: $surface;
+.private-chat {
+  background-color: $surface;
+  flex: 1;
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid black;
+    padding: 10px;
+    .user-info {
+      display: flex;
+      align-items: center;
+      h5 {
+        margin-left: 10px;
+      }
+    }
+
+    .chat-open-more {
+      cursor: pointer;
+    }
+  }
+
+  .chat-messages-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 124px);
+  }
+
+  .chat-messages {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: scroll;
+    .initial-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: lightgray;
+      margin-bottom: 10px;
+      //timestamp of when request was created
+      span {
+        background-color: $background;
+        padding: 2px 10px;
+        border-radius: 15px;
+      }
+      //You are chatting with {username}
+      p {
+        display: flex;
+        margin: 5px;
+        svg {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+  .chat-send-message {
+    margin: 10px;
+    background-color: $background;
+    border-radius: 5px;
+    input,
+    label,
+    svg {
+      color: white;
+    }
+  }
+
+  .chat-message {
+    display: flex;
+    margin: 10px;
+    //justify content will be dynamically determined by who send the message
+    //flex-end for outgoing message and flex-start for incoming (from friend)
+  }
+  .chat-message-bubble {
+    width: 50%;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 0 15px;
+    .chat-text,.chat-timestamp {
+      margin: 5px;
+    }
+  }
+  .blue-bubble {
+    background-color: $chat-secondary;
+  }
+  .gray-bubble {
+    background-color: $chat-primary;
+  }
 }

@@ -13,3 +13,18 @@ html {
 }
 
 $fullHeight-with-navbar: calc(100vh - 62px);
+
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: $surface; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $surface-highlight; 
+  border-radius: 10px;
+}
