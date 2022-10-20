@@ -7,11 +7,13 @@ import {
   PendingFriendsRequests,
 } from "../reducers/friendsReducers";
 
+
+
 const friendsSlice = createSlice({
   name: "Friends",
   initialState: {
     list: [],
-    requests: [],
+    requests: [{type:"outgoing",requests:[]},{type:"pending",requests:[]}],
     loading: false,
     error: "",
     success: "",
@@ -23,6 +25,21 @@ const friendsSlice = createSlice({
     const friend = state.list[index];
     state.currentFriend = friend;
     },
+    handleFriendRequest:(state,{payload})=>{
+      // state.requests
+      const incomingRequest = payload.data;
+      const user = payload.user;
+      switch(incomingRequest.status){
+        case "pending":
+          //check if requester is user if yes,push to ongoing else pending
+        if(user.id === incomingRequest.requester.id) state.requests[0].requests.push(incomingRequest);  
+        else state.requests[1].requests.push(incomingRequest);
+        
+        break;
+        default:break;
+      }
+
+    }
   },
   extraReducers: {
     //Friend requests
@@ -36,7 +53,7 @@ const friendsSlice = createSlice({
     },
     [PendingFriendsRequests.rejected]: (state, {payload}) => {
       state.loading = false;
-      state.error = {payload}.payload;
+      state.error = payload;
       state.success = "";
     },
     //All Friends
@@ -101,6 +118,6 @@ const friendsSlice = createSlice({
   },
 });
 
-export const {setFriendById} = friendsSlice.actions;
+export const {setFriendById , handleFriendRequest } = friendsSlice.actions;
 
 export default friendsSlice.reducer;
