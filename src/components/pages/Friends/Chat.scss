@@ -58,6 +58,11 @@
     }
   }
   .chat-send-message {
+    display:flex;
+    align-items: center;
+    svg:first-child{
+      margin:0 10px;
+    }
     margin: 10px;
     background-color: $background;
     border-radius: 5px;
@@ -65,6 +70,9 @@
     label,
     svg {
       color: white;
+    }
+    svg{
+      cursor: pointer;
     }
   }
 
@@ -83,10 +91,41 @@
       margin: 5px;
     }
   }
-  .blue-bubble {
-    background-color: $chat-secondary;
-  }
+
   .gray-bubble {
-    background-color: $chat-primary;
+    background-color: $chat-primary !important;
   }
+}
+
+#color-menu{
+ .MuiPaper-root{
+  text-align: center;
+  background-color: $surface;
+  max-width: 220px;
+  min-height: 150px;
+  border-radius:5px;
+  color:white;
+  padding:0;
+}
+ .color-picker{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap:wrap;
+ }
+ .dot{
+  $dotsize:46px;
+  width: $dotsize;
+  height: $dotsize;
+  border-radius: 100%;
+  margin:5px;
+  border:2px solid black;
+ }
+ .dot:hover{
+  border:2px solid red;
+  cursor: pointer;
+ }
+ .dot-selected{
+  border:2px solid red;
+ }
 }
