@@ -25,7 +25,7 @@ function App() {
   },[dispatch]);
 
   return (
-  <Suspense fallback={<LinearProgress/>}>
+  <Suspense fallback={<LinearProgress color="secondary"/>}>
     <Routes>
       <Route path="/" element={isLoggedIn && !loading ? <Navigate to="/dashboard"/> : <LandingPage/>}/>
       <Route path="/login" element={<LoginPage/>} />
