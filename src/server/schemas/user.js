@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema(
   {
     id: {
       type: String,
-      default: v4(),
     },
     email: {
       type: String,
@@ -43,6 +42,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   try {
     this.password = await bcrypt.hash(this.password, 12);
+    this.id = v4();//to make sure unique ide is generated every time
     return next();
   } catch (err) {
     return next(err);
@@ -62,6 +62,7 @@ userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   delete obj._id;
+  delete obj.__v; 
   delete obj.friends;
   delete obj.updatedAt;
   return obj;
