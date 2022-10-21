@@ -1,7 +1,7 @@
 import { Avatar, TextField, Typography , Menu , MenuItem } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { setFriendById } from '../../../redux/slices/friendsSlice';
 import "./Chat.scss";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -11,16 +11,19 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ChatThemeColors from "./default-chat-config.json";
 import {v4} from "uuid";
 import { addChatMessage, selectChatBubbleColor } from '../../../redux/slices/chatSlice';
+import { RemoveFriend } from '../../../redux/reducers/friendsReducers';
 
 function Chat({socket}) {
   const {id} = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {list,currentFriend} = useSelector(state=>state.friends);
   const {user} = useSelector(state=>state.auth);
   useEffect(()=>{
     //if user loaded /friends/dm/id directly
-    if(list.length > 0)dispatch(setFriendById({id}));  
-  },[list,dispatch,id]);
+    if(list.length > 0 && id)dispatch(setFriendById({id}));  
+    else navigate("/friends");
+  },[list,dispatch,id,navigate]);
 
   useEffect(()=>{
     if(!socket) return;
@@ -49,7 +52,7 @@ function Chat({socket}) {
   // scroll down on new message
   const chatBottom = useRef();
   useEffect(()=>{
-    chatBottom.current.scrollIntoView({behaviour:"smooth"});
+    if(chatBottom.current)chatBottom.current.scrollIntoView({behaviour:"smooth"});
   },[chatMessages]);
 
   return (
@@ -125,10 +128,17 @@ function ChatBubble({sentBy,text,timestamp}){
 
 //TODO:handle functions mentioned in menu items
 function MoreMenu({anchor,handleClose}){
+  const dispatch = useDispatch();
+  const {currentFriend} = useSelector(state=>state.friends);
+  const removeFriend=()=>{dispatch(RemoveFriend({friendId:currentFriend.id}));}
+  // const reportFriend=()=>{console.log("TODO : report friend");}
+  // const shareProfile=()=>{console.log("TODO : grab link for friend's profile");}
+
   return(
     <Menu open={Boolean(anchor)} anchorEl={anchor} onClose={handleClose} >
-    <MenuItem> Remove Friend </MenuItem>
-    <MenuItem> Report </MenuItem>
+    {/* it gets redirected */}
+    <MenuItem onClick={()=>{removeFriend(); handleClose();}}> Remove Friend </MenuItem>
+    <MenuItem > Report </MenuItem>
     <MenuItem> Share profile link </MenuItem>
 
     </Menu>
