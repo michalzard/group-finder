@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { removeFriendById, removeFriendRequest } from "../slices/friendsSlice";
 
 export const LoadAllFriends = createAsyncThunk(
     "Friends/All",async(_,thunkApi)=>{
@@ -38,8 +38,8 @@ export const PendingFriendsRequests = createAsyncThunk(
 export const AcceptFriendRequest = createAsyncThunk(
     "Friends/AcceptFriendRequest",async({requesterId},thunkApi)=>{
     return await axios.patch(`${process.env.REACT_APP_API_URL}/friends/accept`,{requesterId},{withCredentials:true}).then(data=>{
-        const {message} = data.data;
-        return message; 
+        const {acceptedId} = data.data;
+        return thunkApi.dispatch(removeFriendRequest({id:acceptedId}));
     }).catch(err=>{
         return thunkApi.rejectWithValue(err.response.data.message);
     })
@@ -49,8 +49,8 @@ export const AcceptFriendRequest = createAsyncThunk(
 export const DeclineFriendRequest = createAsyncThunk(
     "Friends/DeclineFriendRequest",async({requesterId},thunkApi)=>{
     return await axios.patch(`${process.env.REACT_APP_API_URL}/friends/decline`,{requesterId},{withCredentials:true}).then(data=>{
-        const {message} = data.data;
-        return message; 
+        const {declinedId} = data.data;
+        return thunkApi.dispatch(removeFriendRequest({id:declinedId}));
     }).catch(err=>{
         return thunkApi.rejectWithValue(err.response.data.message);
     })
@@ -60,8 +60,19 @@ export const DeclineFriendRequest = createAsyncThunk(
 export const CancelFriendRequest = createAsyncThunk(
     "Friends/CancelFriendRequest",async({recipientId},thunkApi)=>{
     return await axios.patch(`${process.env.REACT_APP_API_URL}/friends/cancel`,{recipientId},{withCredentials:true}).then(data=>{
-        const {message} = data.data;
-        return message; 
+        const {deletedId} = data.data;
+        return thunkApi.dispatch(removeFriendRequest({id:deletedId}));
+    }).catch(err=>{
+        return thunkApi.rejectWithValue(err.response.data.message);
+    })
+    }
+)
+
+export const RemoveFriend = createAsyncThunk(
+    "Friends/Remove",async({friendId},thunkApi)=>{
+    return await axios.delete(`${process.env.REACT_APP_API_URL}/friends/remove?friendId=${friendId}`,{withCredentials:true}).then(data=>{
+        const {removedId} = data.data;
+        return thunkApi.dispatch(removeFriendById({id:removedId}));
     }).catch(err=>{
         return thunkApi.rejectWithValue(err.response.data.message);
     })

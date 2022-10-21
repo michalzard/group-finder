@@ -10,6 +10,7 @@ const {parseCookie,checkForSession}  = require("../utils");
 // PATCH /accept -> accepted state on fr
 // PATCH /decline -> declined state on fr
 // PATCH /cancel -> remove whole friend request object
+// DELETE
 
 router.get("/",async (req,res)=>{
 try{
@@ -35,21 +36,21 @@ router.get("/requests",async (req,res)=>{
         const session = await checkForSession(cookie.session_id);
         const {user_id} = session.session;
         const requester = await User.findById(user_id);
+        const userFilterOptions = {password:0,_id:0,updatedAt:0};
         const friendRequests = await FriendRequest.find({$or:[{requester:user_id},{recipient:user_id}]})
-        .populate("recipient").populate("requester");
-
+        .populate("recipient",userFilterOptions).populate("requester",userFilterOptions);
         if(friendRequests) res.status(200).send({message:"Friend Requests",requests:[
             {
                 type:"outgoing",
                 requests:friendRequests.filter(request=>{
                 if(request.status === "pending" && request.requester.id === requester.id)
-                return request})
+                return request.toJSON()})
             },
             {
                 type:"pending",
                 requests:friendRequests.filter(request=>{
                 if(request.status === "pending" && request.requester.id !== requester.id)
-                return request})
+                return request.toJSON()})
             }
         ]});
         else res.status(404).send({message:"Friend Requests unavailable"});
@@ -115,7 +116,7 @@ router.patch("/accept",async(req,res)=>{
                 requester.acceptFriend(recipient._id);
                 const isAccepted = friendRequest.accept();
                 friendRequest.save();
-                if(isAccepted)  res.status(200).send({message:"Friend request accepted"});
+                if(isAccepted)  res.status(200).send({message:"Friend request accepted",acceptedId:friendRequest.id});
                 else res.status(200).send({message:"Friend request already accepted"});
             }else{
                 res.status(200).send({message:"Friend request no longer pending"});
@@ -137,12 +138,11 @@ try{
         const {user_id} = session.session;
         const requester = await User.findOne({id:requesterId});
         if(!requester) return res.status(404).send({message:"Bad Request"}); 
-        const pendingRequest = await FriendRequest.findOne({requester:requester._id,recipient:user_id});        
-        if(pendingRequest){
-            const isDeclined = pendingRequest.decline();
-            pendingRequest.save();
-            if(isDeclined) res.status(200).send({message:"Friend request declined"});  
-            else  res.status(200).send({message:"Friend request was already declined"});  
+        const declinedRequest = await FriendRequest.findOneAndDelete({requester:requester._id,recipient:user_id});        
+        if(declinedRequest){
+            // const isDeclined = declinedRequest.decline();
+            // declinedRequest.save();
+            res.status(200).send({message:"Friend request declined",declinedId:declinedRequest.id});  
         }else{
             res.status(200).send({message:"Friend request is no longer pending"});
         }
@@ -158,15 +158,14 @@ res.status(500).send(err.message);
 router.patch("/cancel",async (req,res)=>{
     try{
         const cookie = parseCookie(req.headers.cookie);
-        console.log(cookie)
         const {recipientId} = req.body;
         if(cookie){
             const session = await checkForSession(cookie.session_id);
             const {user_id} = session.session;
             const recipient = await User.findOne({id:recipientId});
-            const pendingRequest = await FriendRequest.findOneAndDelete({requester:user_id,recipient:recipient._id,status:"pending"});        
-            if(pendingRequest){
-               res.status(200).send({message:"Outgoing friend request cancelled"});
+            const cancelledRequest = await FriendRequest.findOneAndDelete({requester:user_id,recipient:recipient._id,status:"pending"});        
+            if(cancelledRequest){
+               res.status(200).send({message:"Outgoing friend request cancelled",deletedId:cancelledRequest.id});
             }else{
                 res.status(200).send({message:"Friend request is no longer pending"});
             }
@@ -178,5 +177,42 @@ router.patch("/cancel",async (req,res)=>{
     res.status(500).send(err.message);
     }
 });
+
+
+router.delete("/remove",async (req,res)=>{
+try{
+    const cookie = parseCookie(req.headers.cookie);
+    const {friendId} = req.query;
+    if(cookie){
+        const session = await checkForSession(cookie.session_id);
+        const {user_id} = session.session;
+        const user = await User.findById(user_id).populate("friends");
+        const friend = await User.findOne({id:friendId});
+        if(user && friend){
+            //index used to remove friend from user's friend list
+            const removeUserFriendListIndex  = user.friends.map(friend=>friend.id).indexOf(friendId);
+            //the other way around
+            const removeFriendFriendListIndex  = user.friends.map(friend=>friend.id).indexOf(friendId);
+            //if one or the other returns -1 then one side is missing so just return 404
+            if(removeUserFriendListIndex !== -1 && removeFriendFriendListIndex !== -1){
+                user.friends.splice(removeUserFriendListIndex,1);
+                friend.friends.splice(removeFriendFriendListIndex,1);
+                user.save();
+                friend.save();
+                res.status(200).send({message:"Removed from friendlist",removedId:friend.id});
+            }else{
+                res.status(404).send({message:"Resources unavailable"});
+            }
+        }else{
+            res.status(404).send({message:"Resource unavailable"});
+        }    
+    }else{
+        res.status(401).send({message:"Unauthorized"});  
+    }
+}catch(err){
+    res.status(500).send(err.message);
+}
+});
+
 
 module.exports = router;
