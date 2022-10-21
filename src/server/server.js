@@ -9,7 +9,7 @@ require("dotenv").config();
 mongoose.connect(`${process.env.DB_URI}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+},()=>{console.log(`database connected`)});
 
 const dbStore = new mongoStore({
   uri: process.env.DB_URI,
