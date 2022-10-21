@@ -9,7 +9,6 @@
   button {
     border: 1px solid $gradient-pink !important;
     color: white;
-    margin-left: 10px;
   }
   svg {
     font-size: 35px;
@@ -18,24 +17,48 @@
   .hero {
     background: linear-gradient(to right, $gradient-purple, $gradient-pink);
     padding: 100px;
+    @media (max-width: 600px) {
+      padding: 20px;
+    }
+
     img {
       object-fit: scale-down;
+      @media (max-width: 600px) {
+        display: flex;
+        height: 80px;
+      }
     }
     .alreadyMember {
       color: lightgray;
       display: flex;
+      button {
+        margin-left: 10px;
+      }
     }
     .btnImg {
       width: 80px;
       height: 25px;
       margin: 0px 10px;
+      @media (max-width: 600px) {
+        width: 50px;
+        margin: 0px 5px;
+      }
     }
     .btns {
+      width: 100%;
       button {
         color: lightgray;
         border: 1px solid $gradient-pink !important;
       }
       margin-bottom: 20px;
+    }
+    .btns-mobile {
+      button {
+        margin: 10px 10px 0 0;
+      }
+      button:last-child {
+        margin-bottom: 20px;
+      }
     }
   }
   .connect {
@@ -43,6 +66,26 @@
     flex-direction: column;
     padding: 100px;
     margin-bottom: 100px;
+
+    @media (max-width: 600px) {
+      padding: 0px;
+      article {
+        flex-direction: column;
+        align-items: center;
+      }
+      section{
+        text-align: center;
+      }
+      h3{
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        svg{
+          margin-right: 5px;
+        }
+      }
+    }
+
     button {
       margin-left: auto;
       margin-right: auto;
@@ -62,16 +105,27 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 100px;
+    padding: 80px;
+    @media (max-width: 600px) {
+      padding: 30px;
+    }
     .exp-grid {
       display: flex;
       margin: 100px 0;
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+
       section {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 100px;
+        @media (max-width: 600px) {
+          border-left: 0;
+          border-right: 0;
+        }
 
         border: 1px solid $surface;
         h4 {
@@ -92,6 +146,13 @@
   }
   .chat-w-friends {
     @include flexWhite();
+    margin: 0px 20px;
+    @media (max-width: 600px) {
+      flex-direction: column;
+      img {
+        width: 95% !important;
+      }
+    }
 
     justify-content: space-around;
     align-items: center;
@@ -107,6 +168,14 @@
 
     margin: 200px 0;
     padding: 100px;
+    @media (max-width: 600px) {
+      padding: 20px;
+      margin: 50px 0;
+      svg {
+        font-size: 30px;
+        margin-right: 10px;
+      }
+    }
     justify-content: space-around;
     align-items: center;
   }
@@ -117,12 +186,26 @@
     flex-direction: column;
     align-items: center;
     padding: 200px;
+
+    @media (max-width: 600px) {
+      padding: 10px;
+      svg {
+        margin-right: 5px;
+      }
+      .cons > h6 {
+        margin-left: 40px !important;
+      }
+    }
+
     article {
       display: flex;
       width: 100%;
       justify-content: space-around;
       align-items: center;
       margin-top: 20px;
+    }
+    .cons > h6 {
+      margin-left: 55px;
     }
     .pro,
     .con {
@@ -144,6 +227,13 @@
   justify-content: center;
   padding: 50px;
   margin: 100px;
+  @media (max-width: 600px) {
+    margin: 100px 0;
+    padding: 0;
+    h3 {
+      text-align: center;
+    }
+  }
   img {
     width: 36px;
     height: 36px;
@@ -165,5 +255,12 @@ footer {
   a {
     color: $gradient-pink;
     text-decoration: none;
+  }
+
+  @media (max-width:600px) {
+    align-items: center;
+    padding:0px;
+    justify-content: space-around;
+    margin-bottom:20px;
   }
 }

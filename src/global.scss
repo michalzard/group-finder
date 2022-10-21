@@ -16,11 +16,9 @@ $fullHeight-with-navbar: calc(100vh - 62px);
 
 
 ::-webkit-scrollbar{
-  width: 10px;
-}
-/* Track */
-::-webkit-scrollbar-track {
-  background: $surface; 
+  @media (min-width:1000px) {
+    width: 5px;
+  }
 }
 
 /* Handle on hover */

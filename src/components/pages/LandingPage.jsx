@@ -21,6 +21,8 @@ import FacebookIcon from "../../assets/fb-icon.png";
 import InstagramIcon from "../../assets/instagram-icon.png";
 
 import {useNavigate} from "react-router-dom";
+import {useMediaQuery} from "@mui/material";
+
 
 function LandingPage() {
   return (
@@ -40,23 +42,41 @@ function LandingPage() {
 export default LandingPage;
 
 function HeroSection() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  
+  const isMobile = useMediaQuery("(max-width:600px)");
   return (
     <section className="hero">
       <img src={GroupsLogo} alt="App logo" />
-      <Typography variant="h4" color="white" gutterBottom>
+      <Typography variant={`${isMobile ? "h6" : "h5"}`} color="white" gutterBottom>
         Find your dream team!
       </Typography>
-      <Typography variant="h6" color="lightgray" gutterBottom>
+      <Typography variant={`${isMobile ? "body2" : "h6"}`} color="lightgray" gutterBottom>
         Search for people to play with,match with your dream teammates,
         <br />
         meet new players and never play alone again!
       </Typography>
-      <Typography variant="subtitle1" color="lightgray" gutterBottom>
+      <Typography variant={`${isMobile ? "subtitle2" : "subtitle1"}`} color="lightgray" gutterBottom>
         <u>Made by gamer for gamers</u>™
       </Typography>
 
-      <ButtonGroup className="btns">
+      {
+        isMobile ?
+        <div className="btns-mobile">
+        <Button variant="outlined" onClick={()=>{navigate("/register")}} startIcon={<EditIcon />}>
+          Register
+        </Button>
+        <Button variant="outlined" endIcon={<ArrowDropDownIcon />}>
+          What is{" "}
+          <img
+            src={GroupsLogo}
+            alt="App logo inside button"
+            className="btnImg"
+          />{" "}
+          all about?{" "}
+        </Button>
+        </div>
+        :  <ButtonGroup className="btns">
         <Button variant="outlined" onClick={()=>{navigate("/register")}} startIcon={<EditIcon />}>
           Register
         </Button>
@@ -70,6 +90,8 @@ function HeroSection() {
           all about?{" "}
         </Button>
       </ButtonGroup>
+      }
+    
 
       <section className="alreadyMember">
         <Typography variant="subtitle1" color="lightgray">
@@ -83,52 +105,55 @@ function HeroSection() {
 
 function ConnectSection() {
   const navigate= useNavigate();
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const desc = `${isMobile ?"subtitle2" : "subtitle1"}`;
   return (
     <div className="connect">
       <article>
         <section className="signup">
-          <Typography variant="h3">
+          <Typography variant="h3" gutterBottom>
             <EditIcon /> Sign up
           </Typography>
-          <Typography variant="subtitle1">
+          <Typography variant={desc}>
             Tell us about you and what you are looking for.
           </Typography>
         </section>
 
         <section className="lookaround">
-          <Typography variant="h3">
+          <Typography variant="h3" gutterBottom>
             <SearchIcon />
             Look Around
           </Typography>
-          <Typography variant="subtitle1">
+          <Typography variant={desc}>
             Personalised list of players with shared common interest.
           </Typography>
         </section>
 
         <section className="connect-players">
-          <Typography variant="h3">
+          <Typography variant="h3" gutterBottom>
             <PersonAddIcon />
             Connect
           </Typography>
-          <Typography variant="subtitle1">
+          <Typography variant={desc}>
             Add one and other,
-            <br />
             get to know each other and never play solo again.
           </Typography>
         </section>
       </article>
-      <Button variant="outlined" onClick={()=>{navigate("signup")}} startIcon={<EditIcon />} size="large">
-        Sign up
+      <Button variant="outlined" onClick={()=>{navigate("/login")}} startIcon={<EditIcon />} size="large">
+      Login
       </Button>
     </div>
   );
 }
 
 function ExperienceSection() {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <div className="experience">
-      <Typography variant="h3">The ultimate group finder experience</Typography>
-      <Typography variant="h6" color="lightgray">
+      <Typography variant={`${isMobile ? "h4" : "h3"}`} gutterBottom>The ultimate group finder experience</Typography>
+      <Typography variant={`${isMobile ? "subtitle1" : "h6"}`} color="lightgray">
         Find like-minded groups of players based on your common interest.
       </Typography>
       <article className="exp-grid">
@@ -150,21 +175,20 @@ function ExperienceSection() {
 }
 
 function ChatSection() {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <div className="chat-w-friends">
       <section className="info">
-        <Typography variant="h3">Chat with your new friends!</Typography>
-        <Typography variant="subtitle1" color="lightgray" gutterBottom>
+        <Typography variant={`${isMobile ? "h5" :"h3"}`} gutterBottom>Chat with your new friends!</Typography>
+        <Typography variant={`${isMobile ? "body1" : "subtitle1"}`} color="lightgray" gutterBottom>
           No more waiting for people to accept you via discord,
           <br />
           you can message them immediately trough our chat system and start
           playing.
-        </Typography>
-        <Typography variant="subtitle1" color="lightgray">
+          <br/>
           if you are looking for duo or someone to fill up that last slot in
-          your team,
-          <br />
-          use chat to see who's available.
+          your team, use chat to see who's available.
         </Typography>
       </section>
       <img src={ChatExample} alt="Message players trough our chat system" />
@@ -173,10 +197,12 @@ function ChatSection() {
 }
 
 function ShareProfileSection() {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <div className="share-profile">
       <section className="info">
-        <Typography variant="h3">
+        <Typography variant={`${isMobile ? "h4" : "h3"}`}>
           <ShareIcon />
           Share your profile
         </Typography>
@@ -192,9 +218,11 @@ function ShareProfileSection() {
 }
 
 function ProsAndConsSection() {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <div className="pros-cons">
-      <Typography variant="h3" gutterBottom>
+      <Typography variant={`${isMobile ? "h4" : "h3"}`} gutterBottom>
         Pros & Cons
       </Typography>
       <article>
@@ -205,7 +233,7 @@ function ProsAndConsSection() {
           <Pro description={"Play with like-minded people."} />
         </section>
         <section className="cons">
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant={`${isMobile ? "subtitle2" : "subtitle1"}`} gutterBottom>
             Don't waste your time
           </Typography>
           <Con description={"scrolling trough lists of unavailable players."} />
@@ -225,39 +253,34 @@ function ProsAndConsSection() {
 }
 
 function Pro({ description }) {
+  const isMobile = useMediaQuery("(max-width:600px)");
   return (
     <section className="pro">
       <CheckIcon />
-      <Typography>{description}</Typography>
+      <Typography variant={`${isMobile ? "caption" : "body1" }`}>{description}</Typography>
     </section>
   );
 }
 
 function Con({ description }) {
+  const isMobile = useMediaQuery("(max-width:600px)");
   return (
     <section className="con">
       <ClearIcon />
-      <Typography>{description}</Typography>
+      <Typography variant={`${isMobile ? "caption" : "body1" }`}>{description}</Typography>
     </section>
   );
 }
 
-/**
- * 
-Let's become friends
--------------------------
-social media links, borders and background color with theme color of that link
-
-Logo and then footer stuff
- */
-
 function SocialLinks() {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <section className="links">
       <Typography variant="h3" gutterBottom>
         Let's become friends
       </Typography>
-      <Typography variant="subtitle1" color="lightgray" gutterBottom>
+      <Typography variant={`${isMobile ? "subtitle2" : "subtitle1"}`} color="lightgray" gutterBottom>
         You can find us anywhere on these platforms.
       </Typography>
       <div className="link-imgs">
