@@ -29,15 +29,21 @@ function FriendStatus() {
     return display === buttonName ? "selected" : null;
   }
 
+  const {list} = useSelector(state=>state.friends);
+  // const badgePosition = {vertical:"top",horizontal:"right"};
+
+
   return (
     <div className="friend-status">
       <nav className="friend-nav">
-        <Typography className="title" variant="button"><GroupIcon /> Friends</Typography>
-        <Button variant="text" color="inherit" className={isSelected("all")} onClick={()=>{navigate("/friends/all")}}>All</Button>
-        <Button variant="text" color="inherit" className={isSelected("online")} onClick={()=>{navigate("/friends/online")}}>Online</Button>
-        <Button variant="text" color="inherit" className={isSelected("pending")} onClick={()=>{navigate("/friends/pending")}}>Pending</Button>
-        <Button variant="text" color="inherit" className={isSelected("blocked")} onClick={()=>{navigate("/friends/blocked")}}>Blocked</Button>
+      <Typography className="title" variant="button"><GroupIcon /> Friends</Typography>
+        <Button variant="text" className={isSelected("all")} onClick={()=>{navigate("/friends/all")}}>{`All ${list.length ? `- ${list.length}` : ""} `} </Button>
+        <Button variant="text" className={isSelected("online")} onClick={()=>{navigate("/friends/online")}}>{`Online - 999`}</Button>
+        <Button variant="text" className={isSelected("pending")} onClick={()=>{navigate("/friends/pending")}}>{`Pending - 999`}</Button>
+        <Button variant="text" className={isSelected("blocked")} onClick={()=>{navigate("/friends/blocked")}}>{`Blocked - 999`}</Button>
+
         <Button variant="contained" color="success" onClick={()=>{navigate("/friends/add")}}>Add Friend</Button>
+      
       </nav>
       <section className="friends-by-status">
        {
@@ -80,8 +86,8 @@ function AllPendingRequests(){
       Pending - {pendingRequests && outgoingRequests ? pendingRequests.requests.length + outgoingRequests.requests.length : 0}</Typography>
       <hr/>
       <section className="requests">
-      { outgoingRequests ? outgoingRequests.requests.map(req=>{return <FriendRequest key={req._id} type={outgoingRequests.type} request={req}/>}) : <CircularProgress/>}
-      { pendingRequests ? pendingRequests.requests.map(req=>{return <FriendRequest key={req._id} type={pendingRequests.type} request={req}/>}) : <CircularProgress/>}
+      { outgoingRequests ? outgoingRequests.requests.map(req=>{return <FriendRequest key={req.id} type={outgoingRequests.type} request={req}/>}) : <CircularProgress/>}
+      { pendingRequests ? pendingRequests.requests.map(req=>{return <FriendRequest key={req.id} type={pendingRequests.type} request={req}/>}) : <CircularProgress/>}
 
       </section>
       </>

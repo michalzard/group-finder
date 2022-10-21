@@ -12,7 +12,7 @@ import {io} from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 import Chat from './Chat';
 import { LoadAllFriends, PendingFriendsRequests } from '../../../redux/reducers/friendsReducers';
-import { handleFriendRequest } from '../../../redux/slices/friendsSlice';
+import { addFriendRequest, replaceFriendList } from '../../../redux/slices/friendsSlice';
 
 function Friends() {
   //Id will be used to determine which dms to open and which person's chat opens
@@ -37,12 +37,18 @@ function Friends() {
   useEffect(()=>{
     const socket = io(`${process.env.REACT_APP_GATEWAY_URL}`,{auth:user});
     setSocket(socket);
-    socket.on("FR_CHANGE",(data)=>console.log(data));
+    // socket.on("FR_CHANGE",(data)=>console.log(data));
 
-    socket.on("NEW_FRIEND_REQUEST",(data)=>{
-      console.log(data);
-      dispatch(handleFriendRequest({data,user}));
+    //on new friend request
+    socket.on("FR_NEW",(data)=>{
+      dispatch(addFriendRequest({data,user}));
     });
+
+    socket.on("FRIENDLIST_UPDATE",(data)=>{
+      const {updatedFriendList} = data;
+      dispatch(replaceFriendList(updatedFriendList));
+    })
+
     return ()=> socket.disconnect();
   },[user,dispatch]);
 
