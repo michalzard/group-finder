@@ -15,7 +15,8 @@ function LoginPage() {
   const loginValidationSchema = yup.object().shape({
     username:yup.string().required().min(2).max(20),
     password:yup.string().required().min(5),
-  })
+  });
+
   const {values,errors,touched,handleChange,handleBlur,handleSubmit,isSubmitting} = useFormik({
     initialValues:{
       username:"",

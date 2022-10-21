@@ -35,8 +35,9 @@ function RegisterPage() {
     username:yup.string().min(2).max(20).required(),
     location:yup.string().notRequired(),
     password:yup.string().required().min(5),
-    confirmPassword:yup.string().required().oneOf([yup.ref("password")],"Password need to match")
-  })
+    confirmPassword:yup.string().required().oneOf([yup.ref("password")],"Passwords need to match"),
+  });
+
   const {errors,values,touched,handleChange,handleBlur,handleSubmit,isSubmitting,setFieldValue} = useFormik({
     initialValues:{
       email:"",
@@ -47,8 +48,8 @@ function RegisterPage() {
     },
     validationSchema:registerValidationSchema,
     onSubmit:(values,actions)=>{
-      actions.resetForm();
       dispatch(userRegister({email:values.email,username:values.username,password:values.password}));
+      actions.resetForm();
     }
   })
 
