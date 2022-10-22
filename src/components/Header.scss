@@ -44,3 +44,14 @@ header {
     }
   }
 }
+
+//mobile
+
+@media (max-width:600px) {
+  header{
+    justify-content: space-between;
+    a:not(:first-child){
+      margin-left:10px;
+    }
+  }
+}

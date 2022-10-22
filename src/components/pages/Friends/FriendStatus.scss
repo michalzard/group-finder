@@ -3,7 +3,7 @@
 $padding-onsides: 20px;
 
 .friend-status {
-  display:flex;
+  display: flex;
   flex-direction: column;
   flex: 1; // strech
   background-color: $surface;
@@ -12,9 +12,9 @@ $padding-onsides: 20px;
     align-items: center;
     justify-content: space-around;
     border-bottom: 2px solid black;
+    margin: 0px 20px;
     padding: 15px 0px;
-
-    button:not(:last-child) {
+    button {
       padding: 5px $padding-onsides;
       color: lightgray;
     }
@@ -31,37 +31,73 @@ $padding-onsides: 20px;
     }
   }
 
-  .friends-by-status{
-    margin:20px;
+  .friends-by-status {
+    margin: 20px;
     margin-bottom: 0px;
-    display:flex;
+    display: flex;
     flex-direction: column;
-    flex:1;
+    flex: 1;
     overflow-y: auto;
-    .requests{
-      display:flex;
+    .requests {
+      display: flex;
       flex-direction: column;
-      flex:1;
+      flex: 1;
     }
-    hr{
+    hr {
       width: 100%;
-      border-color:gray;
+      border-color: gray;
     }
   }
-  .friend-request{
+  .friend-request {
     border-radius: 5px;
   }
   .selected {
-    background-color: $surface-highlight;
-    border-radius: 5px;
-    padding-left: $padding-onsides;
-    padding-right: $padding-onsides;
+    color: lightgray;
   }
 
-  .send-friend-request{
-    button{
-      width: 250px;//to fit whole send friend request text
+  .send-friend-request {
+    button {
+      width: 250px; //to fit whole send friend request text
       background-color: $gradient-pink;
     }
   }
+}
+
+//mobile
+@media (max-width: 600px) {
+  .friend-nav {
+    margin: 0 !important;
+    button {
+      padding: 5px 5px !important;
+    }
+  }
+
+  .send-friend-request {
+    button {
+      font-size: 10px;
+      padding: 10px 0px;
+    }
+  }
+}
+
+//mobile specific bottom navigation
+.friend-bottom-nav {
+  display: flex;
+  background-color: $background;
+  height: 50px;
+  align-items: center;
+  justify-content: space-around;
+  svg {
+    cursor: pointer;
+    width: 36px;
+    height: 26px;
+  }
+}
+
+.drawer-friendlist > .MuiPaper-root{
+  background-color: $background !important;
+  color:white;
+  display: flex;
+  //todo : style drawer
+  width: 50%;
 }

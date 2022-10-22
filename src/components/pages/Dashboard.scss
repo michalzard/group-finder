@@ -9,6 +9,8 @@
   color: white;
   align-items: center;
   padding: 50px;
+
+
   .dashboard-content {
     display: flex;
     justify-content: center;
@@ -27,7 +29,6 @@
     margin: 20px 0;
     .info {
       max-width: 320px;
-      max-height: 150px;
       flex: 1;
     }
     svg {
@@ -52,5 +53,27 @@
     padding: 20px;
     margin: 15px;
     width: 50%;
+    min-height: 300px;
+  }
+}
+
+//mobile
+@media (max-width:600px) {
+  .dashboard{
+    padding:10px;
+  }
+  .dashboard-content{
+    flex-direction: column-reverse;
+    padding:0 !important;
+  }
+  .dashboard-new{
+    width: 100% !important;
+    margin:0 !important;
+  }
+  .dashboard-sidebar{
+    margin-right: 0px !important;
+  }
+  .discord-invite{
+    margin-bottom: 20px !important;
   }
 }

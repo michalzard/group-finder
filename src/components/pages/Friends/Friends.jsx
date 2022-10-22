@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../../Header';
 import "../Friends/Friends.scss";
 import GroupIcon from '@mui/icons-material/Group';
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 // import FriendRequest from "./FriendRequest";
 import ForumIcon from '@mui/icons-material/Forum';
 import FriendStatus from './FriendStatus';
@@ -16,13 +16,11 @@ import { addFriendRequest, replaceFriendList } from '../../../redux/slices/frien
 
 function Friends() {
   //Id will be used to determine which dms to open and which person's chat opens
-  const svgsize = {width:22,height:20};
   const {id} = useParams();
-  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   
   const [socket,setSocket] = useState(null);
-  const friendList = useSelector(state=>state.friends.list);
   const {success} = useSelector(state=>state.friends);
   const user = useSelector(state=>state.auth.user);
   useEffect(() => {
@@ -52,26 +50,16 @@ function Friends() {
     return ()=> socket.disconnect();
   },[user,dispatch]);
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <>
     <Header/>
     <main className="friends">
-    <section className="dms">
-    {/* Icon, name, status(online/offline) */}
-    <div className="dm-top">
-    <Typography variant="subtitle1" className={id ? null : "selected"} gutterBottom onClick={()=>{navigate("/friends/all")}}> <GroupIcon sx={svgsize}/>Friends</Typography>
-    <Typography variant="subtitle2" gutterBottom> <ForumIcon sx={svgsize}/>Direct Messages</Typography>
-    </div>
-
-    <div className="dm-friend-avatars">
- 
-    {
-      friendList.map((friend)=>{return <FriendDms key={friend.id} friend={friend}/>})
-    }
-    
-    </div>
-    {/* nav bar on top =>  icon Friends Online All Pending Blocked Add Friend Button  */}
-    </section>
+   {
+    isMobile ? null : <FriendListSidebar/>
+   }
+   
     
     {/* friends status and chat will be displayed here */}
     <section className="dm-content">
@@ -85,4 +73,33 @@ function Friends() {
   )
 }
 
-export default Friends
+export default Friends;
+
+
+export function FriendListSidebar({friendButton}){
+  const {id} = useParams();
+  const navigate = useNavigate();
+  const friendList = useSelector(state=>state.friends.list);
+  const svgsize = {width:22,height:20};
+  return(
+    <section className="dms">
+    {/* Icon, name, status(online/offline) */}
+    <div className="dm-top">
+    {
+      friendButton ? <Typography variant="subtitle1" className={id ? null : "selected"} gutterBottom onClick={()=>{navigate("/friends/all")}}> <GroupIcon sx={svgsize}/>Friends</Typography>
+      : null
+    }
+    <Typography variant="subtitle2" gutterBottom> <ForumIcon sx={svgsize}/>Direct Messages</Typography>
+    </div>
+
+    <div className="dm-friend-avatars">
+ 
+    {
+      friendList.map((friend)=>{return <FriendDms key={friend.id} friend={friend}/>})
+    }
+    
+    </div>
+    {/* nav bar on top =>  icon Friends Online All Pending Blocked Add Friend Button  */}
+    </section>
+)
+}
