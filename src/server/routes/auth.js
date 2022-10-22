@@ -19,7 +19,7 @@ router.post("/register", (req, res) => {
           doc.set("password", undefined);
           req.session.user_id=registeredUser._id;
           req.session.save();
-          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24, /*1 day*/ });
+          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24 * 7, /*7 days*/ });
           res.status(200).send({ message: "User registered", user: doc });
         })
         .catch((err) => {
@@ -49,7 +49,7 @@ router.post("/login", async (req, res) => {
         if(isValidPassword){
           req.session.user_id=foundUser._id;
           req.session.save();
-          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24, /*1 day*/ }); 
+          res.cookie("session_id",req.session.id,{httpOnly:true,maxAge: 1000 * 60 * 60 * 24 * 7, /*7 days*/ }); 
           res.status(200).send({message:"Login successful",user:foundUser.toJSON()});
         }
         else res.status(401).send({message:"Username or password is incorrect"});
