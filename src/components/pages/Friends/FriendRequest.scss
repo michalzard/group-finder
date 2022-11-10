@@ -1,10 +1,14 @@
-.friend,.friend-request {
+@import "../../../Theme.scss";
+.friend,
+.friend-request {
   display: flex;
   padding: 5px;
   margin: 5px 0px;
   width: 100%;
-  color:white;
-
+  color: white;
+  .friend > section {
+    position: absolute;
+  }
   .friend-user {
     display: flex;
     flex-direction: column;
@@ -34,6 +38,18 @@
   }
 }
 
-.friend-link{
+.friend-link {
   text-decoration: none;
+}
+
+.userStatus {
+  $size: 16px;
+  background-color: gray;
+  width: $size;
+  height: $size;
+  position: relative;
+  margin-left: $size;
+  margin-top: -$size + 4px;
+  border-radius: 50%;
+  border: 3px solid $surface;
 }

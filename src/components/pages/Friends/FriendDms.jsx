@@ -2,11 +2,17 @@ import React from "react";
 import "./FriendRequest.scss";
 import { Avatar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector,  } from "react-redux";
 import { setFriendById } from "../../../redux/slices/friendsSlice";
 
 function FriendDms({ friend }) {
   const dispatch= useDispatch();
+  const {presence} = useSelector(state=>state.friends);
+  const isOnline=(id)=>{
+  if(presence.includes(id)) return true;
+  else return false;
+  }
+  
   if(!friend) return;
   return (
     <Link to={`dm/${friend.id}`} className="friend-link" onClick={()=>{dispatch(setFriendById({id:friend.id}));}}>
@@ -14,6 +20,7 @@ function FriendDms({ friend }) {
         <section>
           <Avatar sx={{ width: 30, height: 30, marginRight: "10px" }} />
           {/* Somehow display on top of avatar status circle */}
+          <div className="userStatus" style={{backgroundColor:isOnline(friend.id) ? "greenyellow" : "gray"}}/>
         </section>
 
         <section className="friend-user">
