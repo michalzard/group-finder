@@ -66,9 +66,8 @@ function Chat({socket,setFriendListOpen}) {
   }
   
   useEffect(()=>{
-    console.log(id);
     dispatch(LoadStoredChatMessages({recipientId:id}));
-  },[]);
+  },[dispatch,id]);
 
 
   return (
