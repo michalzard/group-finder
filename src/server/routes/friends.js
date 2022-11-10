@@ -58,7 +58,6 @@ router.get("/requests",async (req,res)=>{
         res.status(401).send({message:"Unauthorized"});
     }
     }catch(err){
-        console.log(err);
         res.status(500).send(err.message);
     }
 })
@@ -96,7 +95,6 @@ router.post("/request", async (req,res)=>{
             res.status(401).send({message:"Unauthorized"});
         }
     }catch(err){
-        console.log(err);
         res.status(500).send(err.message);
     }       
 })
