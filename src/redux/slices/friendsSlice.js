@@ -15,6 +15,7 @@ const friendsSlice = createSlice({
       { type: "outgoing", requests: [] },
       { type: "pending", requests: [] },
     ],
+    presence: [],
     loading: false,
     error: "",
     success: "",
@@ -64,6 +65,9 @@ const friendsSlice = createSlice({
       } else if (pendingIndex !== -1) {
         state.requests[1].requests.splice(pendingIndex, 1);
       }
+    },
+    updatePresence: (state, { payload }) => {
+      state.presence = payload;
     },
   },
   extraReducers: {
@@ -149,6 +153,7 @@ export const {
   addFriendRequest,
   removeFriendRequest,
   replaceFriendList,
+  updatePresence,
 } = friendsSlice.actions;
 
 export default friendsSlice.reducer;
