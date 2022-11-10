@@ -7,6 +7,7 @@ $padding-onsides: 20px;
   flex-direction: column;
   flex: 1; // strech
   background-color: $surface;
+  overflow-y: scroll;
   .friend-nav {
     display: flex;
     align-items: center;
@@ -94,10 +95,18 @@ $padding-onsides: 20px;
   }
 }
 
-.drawer-friendlist > .MuiPaper-root{
+.drawer-friendlist > .MuiPaper-root {
   background-color: $background !important;
-  color:white;
+  color: white;
   display: flex;
   //todo : style drawer
   width: 50%;
+  padding: 20px;
+  h6 {
+    display: flex;
+    margin-bottom: 15px;
+    svg {
+      margin-right: 10px;
+    }
+  }
 }
