@@ -1,4 +1,4 @@
-import { Avatar, TextField, Typography , Menu , MenuItem } from '@mui/material';
+import { Avatar, TextField, Typography , Menu , MenuItem, useMediaQuery } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,12 +8,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SendIcon from '@mui/icons-material/Send';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
+import MenuIcon from '@mui/icons-material/Menu';
 import ChatThemeColors from "./default-chat-config.json";
 import {v4} from "uuid";
 import { addChatMessage, selectChatBubbleColor } from '../../../redux/slices/chatSlice';
 import { RemoveFriend } from '../../../redux/reducers/friendsReducers';
+import { LoadStoredChatMessages } from '../../../redux/reducers/chatReducers';
 
-function Chat({socket}) {
+
+function Chat({socket,setFriendListOpen}) {
   const {id} = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,9 +41,9 @@ function Chat({socket}) {
   const {chatMessages} = useSelector(state=>state.chat);
 
   const sendDirectMessage=()=>{
-    if(newChatMessage.length > 0){
-      socket.emit("DM_SEND",{msg_id:v4(),content:newChatMessage,to:currentFriend.id});
-      dispatch(addChatMessage({msg_id:v4(),content:newChatMessage,to:currentFriend.id}));
+    if(newChatMessage.length > 0 && newChatMessage.length <= 200){
+      socket.emit("DM_SEND",{msg_id:v4(),content:newChatMessage,to:currentFriend.id,timestamp:Date.now()});
+      dispatch(addChatMessage({msg_id:v4(),content:newChatMessage,to:currentFriend.id,timestamp:Date.now()}));
       setNewChatMessage("");
     }
   }
@@ -55,12 +58,31 @@ function Chat({socket}) {
     if(chatBottom.current)chatBottom.current.scrollIntoView({behaviour:"smooth"});
   },[chatMessages]);
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const {presence} = useSelector(state=>state.friends);
+  const isOnline=(id)=>{
+  if(presence.includes(id)) return true;
+  else return false;
+  }
+  
+  useEffect(()=>{
+    console.log(id);
+    dispatch(LoadStoredChatMessages({recipientId:id}));
+  },[]);
+
+
   return (
     <div className="private-chat">
     {/* Lighter top bar with avatar + name ,status on right */}
     <section className="chat-header">
-    <section className="user-info"><Avatar/> <Typography variant="h5">{currentFriend.username}</Typography>
+    <section className="user-info"> 
+    {/* onclick open sidebar with friendlist */}
+    <MenuIcon className='friendListOpen' onClick={()=>{setFriendListOpen(true);}}/>
+    <Avatar/> 
+    <Typography variant={`${isMobile ? "subtitle1" : "h5"}`}>{currentFriend.username}</Typography>
     {/* show online/offline circle */}
+    <div className="userStatus" style={{backgroundColor:isOnline(id) ? "greenyellow" : "gray",margin:"0 5px"}}/>
+
     </section>
     {/* onclick open menu */}
     <MoreVertIcon className="chat-open-more" onClick={(e)=>setMoreMenuAnchor(e.currentTarget)}/>
@@ -77,7 +99,7 @@ function Chat({socket}) {
     {/* display chat bubbles */}
     {
       chatMessages.filter(message=>message.to === currentFriend.id || message.sender === currentFriend.id).map(message=>
-      <ChatBubble key={message.msg_id} sentBy={{id:message.sender || user.id}} text={message.content}/>)
+      <ChatBubble key={message.msg_id} timestamp={message.timestamp} sentBy={{id:message.sender || user.id}} text={message.content}/>)
     }
     {/* use this element to be scroll down into to have messages in view */}
     <span ref={chatBottom}/>
@@ -85,7 +107,7 @@ function Chat({socket}) {
     {/* input for messages */}
     <section className="chat-send-message">
     <SettingsIcon onClick={(e)=>setColorMenuAnchor(e.currentTarget)}/>
-      <TextField variant='outlined'  placeholder="Enter your message" fullWidth InputProps={{endAdornment:<SendIcon onClick={()=>{sendDirectMessage();}} />,color:"secondary"}}
+      <TextField variant='outlined' inputProps={{maxLength:200}}  placeholder="Enter your message" fullWidth InputProps={{endAdornment:<SendIcon onClick={()=>{sendDirectMessage();}} />,color:"secondary"}}
       onChange={(e)=>setNewChatMessage(e.target.value)} onKeyDown={(e)=>{if(e.key==="Enter"){sendDirectMessage();}}} value={newChatMessage}
       // maybe make focused color gradient
       />
@@ -106,17 +128,19 @@ function ChatBubble({sentBy,text,timestamp}){
   const {user} = useSelector(state=>state.auth);
   const avatarSize ={width:30,height:30};
   const {chatBubbleColor} = useSelector(state=>state.chat)
+
   return(
     <div className="chat-message" style={{justifyContent:user.id === sentBy.id ? "flex-end" : "flex-start"}}>
     {
       user.id === sentBy.id ? null : <Avatar sx={avatarSize}/>
     }
+
     <div className={`chat-message-bubble ${user.id === sentBy.id ? null : "gray-bubble"}`} style={{backgroundColor:chatBubbleColor}}>
     <section className="chat-text">
     <Typography>{text ? text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vitae pulvinar enim, vel tristique ipsum. Ut vitae quam nibh. Integer rutrum nunc eget sodales lacinia. Nullam sit amet interdum lacus. Quisque quis eros ut nulla commodo commodo eu congue turpis. Nam lacinia sit amet risus at consectetur."}</Typography>
     </section>
     <section className="chat-timestamp">
-    <Typography variant="caption">{timestamp ? timestamp : new Date("2022-10-18").toUTCString().substring(0,17)}</Typography>
+    <Typography variant="caption">{timestamp ? new Date(timestamp).toUTCString().substring(0,17) : new Date("2022-10-18").toUTCString().substring(0,17)}</Typography>
     </section>    
     </div>
     {

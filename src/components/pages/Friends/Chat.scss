@@ -1,4 +1,5 @@
 @import "../../../Theme.scss";
+@import "../../../global.scss";
 
 .private-chat {
   background-color: $surface;
@@ -12,7 +13,14 @@
     .user-info {
       display: flex;
       align-items: center;
-      h5 {
+      @media (max-width: 600px) {
+        .MuiAvatar-root {
+          width: 35px;
+          height: 35px;
+        }
+      }
+      h5,
+      h6 {
         margin-left: 10px;
       }
     }
@@ -25,7 +33,7 @@
   .chat-messages-container {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 124px);
+    height: calc(100vh - 60px - 62px);
   }
 
   .chat-messages {
@@ -58,12 +66,12 @@
     }
   }
   .chat-send-message {
-    display:flex;
+    display: flex;
     align-items: center;
-    svg:first-child{
-      margin:0 10px;
+    svg:first-child {
+      margin: 0 10px;
     }
-    margin: 10px;
+    margin: 5px 10px;
     background-color: $background;
     border-radius: 5px;
     input,
@@ -71,7 +79,7 @@
     svg {
       color: white;
     }
-    svg{
+    svg {
       cursor: pointer;
     }
   }
@@ -84,10 +92,16 @@
   }
   .chat-message-bubble {
     width: 50%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    @media (max-width: 600px) {
+      width: 100%;
+    }
     border-radius: 15px;
     padding: 10px;
     margin: 0 15px;
-    .chat-text,.chat-timestamp {
+    .chat-text,
+    .chat-timestamp {
       margin: 5px;
     }
   }
@@ -97,35 +111,39 @@
   }
 }
 
-#color-menu{
- .MuiPaper-root{
-  text-align: center;
-  background-color: $surface;
-  max-width: 220px;
-  min-height: 150px;
-  border-radius:5px;
-  color:white;
-  padding:0;
+#color-menu {
+  .MuiPaper-root {
+    text-align: center;
+    background-color: $surface;
+    max-width: 220px;
+    min-height: 150px;
+    border-radius: 5px;
+    color: white;
+    padding: 0;
+  }
+  .color-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .dot {
+    $dotsize: 46px;
+    width: $dotsize;
+    height: $dotsize;
+    border-radius: 100%;
+    margin: 5px;
+    border: 2px solid black;
+  }
+  .dot:hover {
+    border: 2px solid red;
+    cursor: pointer;
+  }
+  .dot-selected {
+    border: 2px solid red;
+  }
 }
- .color-picker{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap:wrap;
- }
- .dot{
-  $dotsize:46px;
-  width: $dotsize;
-  height: $dotsize;
-  border-radius: 100%;
-  margin:5px;
-  border:2px solid black;
- }
- .dot:hover{
-  border:2px solid red;
-  cursor: pointer;
- }
- .dot-selected{
-  border:2px solid red;
- }
+
+.friendListOpen{
+  margin-right: 10px;
 }
