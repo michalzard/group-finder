@@ -5,16 +5,17 @@
   display: flex;
   flex-direction: column;
   //62px is height os navbar
-  height: $fullHeight-with-navbar;
+  // height: $fullHeight-with-navbar;
   color: white;
   align-items: center;
   padding: 50px;
-
+  padding-bottom: 0;
 
   .dashboard-content {
     display: flex;
     justify-content: center;
     padding: 100px;
+    padding-bottom: 0;
     width: 100%;
   }
   a {
@@ -58,22 +59,22 @@
 }
 
 //mobile
-@media (max-width:600px) {
-  .dashboard{
-    padding:10px;
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 10px;
   }
-  .dashboard-content{
+  .dashboard-content {
     flex-direction: column-reverse;
-    padding:0 !important;
+    padding: 0 !important;
   }
-  .dashboard-new{
+  .dashboard-new {
     width: 100% !important;
-    margin:0 !important;
+    margin: 0 !important;
   }
-  .dashboard-sidebar{
+  .dashboard-sidebar {
     margin-right: 0px !important;
   }
-  .discord-invite{
+  .discord-invite {
     margin-bottom: 20px !important;
   }
 }

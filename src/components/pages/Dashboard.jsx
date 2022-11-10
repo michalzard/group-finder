@@ -6,15 +6,16 @@ import "./Dashboard.scss";
 import {ReactComponent as DiscordLogo} from "../../assets/discord-icon.svg";
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BuildIcon from '@mui/icons-material/Build';
+// import FriendDms from "./Friends/FriendDms";
 
 
-function Dashboard() {
+function Dashboard({friendListAnchor,setFriendListAnchor}) {
   const {user} = useSelector((state)=>state.auth);
   const isMobile = useMediaQuery("(max-width:600px)");
-
+  // const {list} = useSelector(state=>state.friends);
   return (
     <>
-          <Header />
+          <Header friendListAnchor={friendListAnchor} setFriendListAnchor={setFriendListAnchor} />
           <main className="dashboard">
           
           <Typography variant={`${isMobile ? "subtitle1" : "h4"}`} gutterBottom>Welcome back , {user.username}.</Typography>
@@ -55,8 +56,11 @@ function Dashboard() {
           {/* Right side */}
           <section className="dashboard-new">
           <Typography variant="h6">Friends List</Typography>
-          <Typography>List of friends filtered by their activity✨</Typography>
-          <Typography>Online/Offline</Typography>
+          <section className="dashboard-friendlist">
+            {/* {
+              list.map(friend=><FriendDms key={friend.id} friend={friend}/>)
+            } */}
+          </section>
      
           </section>
           
