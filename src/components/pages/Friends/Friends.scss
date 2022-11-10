@@ -5,7 +5,7 @@
   display: flex;
   height: $fullHeight-with-navbar;
   color: white;
-  flex:1;
+  flex: 1;
   .dms {
     display: flex;
     flex-direction: column;
@@ -16,12 +16,11 @@
     .dm-top {
       margin: 15px 10px 0px 10px;
       color: lightgray;
-      h6:first-child{
+      h6:first-child {
         cursor: pointer;
       }
-      .selected{
-        background-color:$surface-highlight;
-
+      .selected {
+        background-color: $surface-highlight;
       }
     }
     .dm-top > h6:first-child {
@@ -43,9 +42,26 @@
       flex-direction: column;
     }
   }
-  .dm-content{
-    display:flex;
+  .dm-content {
+    display: flex;
     flex-direction: column;
     width: 100%;
   }
+}
+
+//mobile friendlist sidebar
+#friendList > .MuiPaper-root {
+  width: 60%;
+  color: white;
+  padding: 10px;
+  p {
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-right: 10px;
+    }
+  }
+
+  background-color: $surface;
 }
