@@ -26,14 +26,13 @@ function Friends() {
   //Id will be used to determine which dms to open and which person's chat opens
   const { id } = useParams();
 
-  const dispatch = useDispatch();
-
   const [socket, setSocket] = useState(null);
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   useEffect(() => {
     //no success message => load whole friend state
-      dispatch(LoadAllFriends());
-      dispatch(PendingFriendsRequests());
+    dispatch(LoadAllFriends());
+    dispatch(PendingFriendsRequests());
   }, [dispatch]);
 
   useEffect(() => {
@@ -67,7 +66,7 @@ function Friends() {
     <>
       <Header />
       <main className="friends">
-        {isMobile ? null : <FriendListSidebar friendButton={true}/>}
+        {isMobile ? null : <FriendListSidebar friendButton={true} />}
 
         {/* friends status and chat will be displayed here */}
         <section className="dm-content">
@@ -105,7 +104,10 @@ export function FriendListSidebar({ friendButton, setFriendListOpen }) {
 
   //TODO: consider adding input for looking up friend's name via searchbar
   return (
-    <section className="dms" onClick={() => isMobile ? setFriendListOpen(false) : null}>
+    <section
+      className="dms"
+      onClick={() => (isMobile ? setFriendListOpen(false) : null)}
+    >
       {/* Icon, name, status(online/offline) */}
       <div className="dm-top">
         {friendButton ? (

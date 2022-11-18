@@ -50,7 +50,7 @@ function FriendStatus() {
       {
         isMobile ? null : <Typography className="title" variant="button"><GroupIcon /> Friends</Typography>
       }
-      <Button variant="text" className={isSelected("all")} onClick={()=>{navigate("/friends/all")}}>All {handleNumber(list.length,99)}</Button>
+      <Button variant="text" className={isSelected("all")} onClick={()=>{navigate("/friends/all")}}>All - {handleNumber(list.length,99)}</Button>
       <Button variant="text" className={isSelected("online")} onClick={()=>{navigate("/friends/online")}}>Online {handleNumber(friendsOnline(),99)} </Button>
       <Button variant="text" className={isSelected("pending")} onClick={()=>{navigate("/friends/pending")}}>Pending</Button>
       <Button variant="text" className={isSelected("blocked")} onClick={()=>{navigate("/friends/blocked")}}>Blocked</Button>
