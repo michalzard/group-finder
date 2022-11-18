@@ -51,6 +51,12 @@ header {
     svg {
       cursor: pointer;
     }
+    .plus{
+      font-size: 30px;
+    }
+    .plus:hover{
+      color:$gradient-sharppink;
+    }
   }
 }
 
@@ -64,3 +70,4 @@ header {
     }
   }
 }
+
