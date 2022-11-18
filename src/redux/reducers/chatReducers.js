@@ -15,3 +15,15 @@ export const LoadStoredChatMessages = createAsyncThunk(
       });
   }
 );
+
+
+export const StoreChatMessage = createAsyncThunk(
+  "Chat/SendMessage", async ({recipientId,content},thunkApi)=>{
+    return await axios.post(`${process.env.REACT_APP_API_URL}/chat/new-message`,{recipientId,content},{withCredentials:true}).then(data=>{
+      const {message} = data.data;
+      return message;
+    }).catch(err=>{
+      return thunkApi.rejectWithValue(err.response.data.message);
+    })
+  }
+)

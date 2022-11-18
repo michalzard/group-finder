@@ -13,10 +13,13 @@ router.get("/messages",async (req,res)=>{
             const session = await checkForSession(cookie.session_id);
             const {user_id} = session.session;
             const {recipientId} = req.query;
-            const recipient =await User.findOne({id:recipientId});
-            if(!recipient) return res.status(404).send({message:"Unable to find recipient"});
-            const conversation = await ChatMessage.find({$and :[ {sender:user_id} , {recipient:recipient._id} ]}).select("-_id -__v -updatedAt").sort({createdAt:-1});
-            if(conversation) res.status(200).send({message:"Conversation loaded",conversation});
+            const recipient = await User.findOne({id:recipientId});
+            if(!recipient) return res.status(400).send({message:"Bad Request"});
+            const conversation = await ChatMessage.find({
+            $and:[{$or:[{sender:user_id},{sender:recipient._id}]},{$or:[{recipient:recipient._id},{recipient:user_id}]}]})
+            .sort({createdAt:1}).select("-_id -__v -updatedAt -createdAt").populate("sender").populate("recipient");
+
+            if(conversation) res.status(200).send({message:"Conversation loaded",conversation:conversation});
             else res.status(404).send({message:"Unable to load conversation"});
         }else res.status(401).send({message:"Unauthorized"});
     }catch(err){
@@ -39,6 +42,7 @@ router.post("/new-message",async (req,res)=>{
             const newMessage = new ChatMessage({
                 sender:user_id,
                 recipient:recipient._id,
+                to:recipientId,
                 content,
             });
             
