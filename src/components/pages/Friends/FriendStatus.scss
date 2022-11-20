@@ -53,7 +53,7 @@ $padding-onsides: 20px;
     border-radius: 5px;
   }
   .selected {
-    color: lightgray;
+    background-color: hsl(0, 0%, 30%);
   }
 
   .send-friend-request {
