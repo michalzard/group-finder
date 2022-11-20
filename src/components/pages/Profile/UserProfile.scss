@@ -1,0 +1,73 @@
+@import "../../../Theme.scss";
+@import "../../../global.scss";
+
+.userProfileCustomization {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.userProfileForm {
+  height: $fullHeight-with-navbar;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: Roboto, sans-serif;
+  color: white;
+  .info {
+    background-color: $surface;
+    border-radius: 15px;
+    padding: 25px;
+    width: 100%;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    $labelMargin: 50px;
+    margin-right: calc($labelMargin / 2);
+    label {
+      margin-right: $labelMargin;
+      margin-left: calc($labelMargin / 2);
+    }
+    .date {
+      div {
+        margin: 5px;
+      }
+    }
+   
+    #select {
+      width:100%;
+      margin:2px 0;
+      
+    }
+    
+  }
+  input,
+  label {
+    color: lightgray;
+    border-radius: 5px;
+  }
+  input{
+    background-color: rgba(0,0,0,.4);
+  }
+}
+
+.col {
+  flex-direction: column;
+  align-items: flex-start !important;
+  margin:0 20px;
+  div{
+    margin:2px 0 ;
+  }
+}
+.lang > div:last-child > div:last-child , .lang > div:last-child{
+  max-width: 330px !important;
+}
+
+#select > div {
+  background-color: $surface;
+}
+
+//mobile
+@media (max-width: 600px) {
+  //todo
+}
