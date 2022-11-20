@@ -3,7 +3,7 @@ const FriendRequest = require("../schemas/friendrequest");
 const User = require("../schemas/user");
 const router = express.Router();
 const {parseCookie,checkForSession}  = require("../utils");
-
+const ChatMessage = require("../schemas/chatMessage");
 // GET / -> friend list
 // GET /requests -> friend requests
 // POST /request -> pending state , send info to recipient
@@ -114,7 +114,7 @@ router.patch("/accept",async(req,res)=>{
                 requester.acceptFriend(recipient._id);
                 const isAccepted = friendRequest.accept();
                 friendRequest.save();
-                if(isAccepted)  res.status(200).send({message:"Friend request accepted",acceptedId:friendRequest.id});
+                if(isAccepted)  res.status(200).send({message:"Friend request accepted",acceptedId:friendRequest.id,friend:requester});
                 else res.status(200).send({message:"Friend request already accepted"});
             }else{
                 res.status(200).send({message:"Friend request no longer pending"});
@@ -185,21 +185,28 @@ try{
         const session = await checkForSession(cookie.session_id);
         const {user_id} = session.session;
         const user = await User.findById(user_id).populate("friends");
-        const friend = await User.findOne({id:friendId});
+        const friend = await User.findOne({id:friendId}).populate("friends");
         if(user && friend){
             //index used to remove friend from user's friend list
             const removeUserFriendListIndex  = user.friends.map(friend=>friend.id).indexOf(friendId);
             //the other way around
-            const removeFriendFriendListIndex  = user.friends.map(friend=>friend.id).indexOf(friendId);
+            const removeFriendFriendListIndex  = friend.friends.map(friend=>friend.id).indexOf(user.id);
+            console.log(friendId,user.id);
+            console.log(removeUserFriendListIndex,removeFriendFriendListIndex);
             //if one or the other returns -1 then one side is missing so just return 404
             if(removeUserFriendListIndex !== -1 && removeFriendFriendListIndex !== -1){
                 user.friends.splice(removeUserFriendListIndex,1);
                 friend.friends.splice(removeFriendFriendListIndex,1);
                 user.save();
                 friend.save();
+                //remove all their messages
+                ChatMessage.deleteMany({
+                    $and:[{$or:[{sender:user_id},{sender:friend._id}]},{$or:[{recipient:friend._id},{recipient:user_id}]}]
+                });
+                //conversation between these 2 users is deleted and                 
                 res.status(200).send({message:"Removed from friendlist",removedId:friend.id});
             }else{
-                res.status(404).send({message:"Resources unavailable"});
+                res.status(404).send({message:"Friendship already removed or incorrect id was provided"});
             }
         }else{
             res.status(404).send({message:"Resource unavailable"});
