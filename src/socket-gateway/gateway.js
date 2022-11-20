@@ -72,8 +72,8 @@ FriendRequest.watch().on("change", async (change) => {
         io.to(requesterSocket).emit("FR_NEW", { request: inserted });
       }
       break;
-    case "update":
-      break;
+    // case "update":
+    //   break;
   }
 });
 
