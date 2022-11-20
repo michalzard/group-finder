@@ -38,8 +38,9 @@ export const PendingFriendsRequests = createAsyncThunk(
 export const AcceptFriendRequest = createAsyncThunk(
     "Friends/AcceptFriendRequest",async({requesterId},thunkApi)=>{
     return await axios.patch(`${process.env.REACT_APP_API_URL}/friends/accept`,{requesterId},{withCredentials:true}).then(data=>{
-        const {acceptedId} = data.data;
-        return thunkApi.dispatch(removeFriendRequest({id:acceptedId}));
+        const {message,acceptedId,friend} = data.data;
+        thunkApi.dispatch(removeFriendRequest({id:acceptedId}));
+        return {message,friend}; 
     }).catch(err=>{
         return thunkApi.rejectWithValue(err.response.data.message);
     })
