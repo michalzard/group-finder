@@ -7,7 +7,7 @@ import "./RegisterPage.scss";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-import Countries from "./countries.json";
+import Countries from "../countries.json";
 
 function RegisterPage() {
   const navigate = useNavigate();
