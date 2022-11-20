@@ -39,8 +39,10 @@ function Chat({ socket, setFriendListOpen }) {
   const { user } = useSelector((state) => state.auth);
   useEffect(() => {
     //if user loaded /friends/dm/id directly
-    if (list.length > 0 && id) dispatch(setFriendById({ id }));
-  }, [list, dispatch, id]);
+    if (list.length > 0 && id )
+      dispatch(setFriendById({ id }));
+    else navigate("/friends");
+  }, [list, dispatch, navigate, id]);
 
   useEffect(() => {
     if (!socket) return;
@@ -260,9 +262,11 @@ function ChatBubble({ sentBy, text, timestamp }) {
 //TODO:handle functions mentioned in menu items
 function MoreMenu({ anchor, handleClose }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { currentFriend } = useSelector((state) => state.friends);
   const removeFriend = () => {
     dispatch(RemoveFriend({ friendId: currentFriend.id }));
+    navigate("/friends");
   };
   // const reportFriend=()=>{console.log("TODO : report friend");}
   // const shareProfile=()=>{console.log("TODO : grab link for friend's profile");}
