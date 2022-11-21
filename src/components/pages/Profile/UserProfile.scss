@@ -16,7 +16,7 @@
   .info {
     background-color: $surface;
     border-radius: 15px;
-    padding: 25px;
+    padding: 15px;
     width: 100%;
   }
   .field {
@@ -31,36 +31,40 @@
     .date {
       div {
         margin: 5px;
+        width: 310px;
       }
     }
-   
     #select {
-      width:100%;
-      margin:2px 0;
-      
+      width: 100%;
+      margin: 2px 0;
     }
-    
+  }
+  .birthday {
+    label {
+      margin-right: 25px !important; //override label margin from .field
+    }
   }
   input,
   label {
     color: lightgray;
     border-radius: 5px;
   }
-  input{
-    background-color: rgba(0,0,0,.4);
+  input {
+    background-color: rgba(0, 0, 0, 0.4);
   }
 }
 
 .col {
   flex-direction: column;
   align-items: flex-start !important;
-  margin:0 20px;
-  div{
-    margin:2px 0 ;
+  margin: 0 20px;
+  div {
+    margin: 2px 0;
   }
 }
-.lang > div:last-child > div:last-child , .lang > div:last-child{
-  max-width: 330px !important;
+.lang > div:last-child > div:last-child,
+.lang > div:last-child {
+  max-width: 330px !important; //TODO: handle resizing of multi select area
 }
 
 #select > div {

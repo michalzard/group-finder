@@ -11,14 +11,8 @@ import Languages from "../languages.json";
 import { useSelector } from "react-redux";
 
 function UserProfile() {
-  const { email, username } = useSelector((state) => state.auth.user);
-  //email needs to be save in useState since its inside textfield that can change its value before saving
-  const [userEmail, setUserEmail] = useState("");
-  useEffect(() => {
-    if (email) {
-      setUserEmail(email);
-    } //if email isnt undefined set it
-  }, [email]);
+  const { email } = useSelector((state) => state.auth.user);
+
   const loadCountryList = useCallback(() => {
     const list = [];
     for (let i = 0; i < Object.keys(Countries).length; i++) {
@@ -27,7 +21,7 @@ function UserProfile() {
       list.push({ value: k, label: v });
     }
     return list;
-  }, [Countries]);
+  }, []);
 
   const loadLanguageList = useCallback(() => {
     const list = [];
@@ -37,7 +31,7 @@ function UserProfile() {
       list.push({ value: k, label: v });
     }
     return list;
-  }, [Languages]);
+  }, []);
 
   const [countryOptions, setCountryOptions] = useState([]);
 
@@ -46,7 +40,7 @@ function UserProfile() {
   useEffect(() => {
     setCountryOptions(loadCountryList());
     setLanguageOptions(loadLanguageList());
-  }, []);
+  }, [loadCountryList, loadLanguageList]);
 
   const multiSelectStyle = {
     control: (styles) => ({ ...styles, backgroundColor: "#1e2024" }),
@@ -82,68 +76,99 @@ function UserProfile() {
       };
     },
   };
-  const maxNumberProps = (min, max) => {
-    return { inputProps: { min, max } };
+  const userProfileValidation = yup.object().shape({
+    //email,birthday,location,languages,current,new,confirm  passwords
+    email: yup.string().email("Enter valid email").required(),
+    birthday: yup.date().required(),
+    location: yup.string().required(),
+    currentPassword: yup.string().min(5).max(30).notRequired(),
+    newPassword: yup.string().min(5).max(30).notRequired(),
+    confirmPassword: yup
+      .string()
+      .min(5)
+      .max(30)
+      .notRequired()
+      .oneOf([yup.ref("newPassword")], "Passwords need to match"),
+  });
+  const {
+    errors,
+    values,
+    isSubmitting,
+    touched,
+    setFieldValue,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+  } = useFormik({
+    initialValues: {
+      email,
+      birthday: new Date().toISOString().substring(0, 10),
+      location: "",
+      languages: [],
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    validationSchema: userProfileValidation,
+    onSubmit: (values, actions) => {
+      console.log(values, actions);
+    },
+  });
+
+  const errorStyle = {
+    color: "red",
+    marginLeft: "25px",
   };
 
-  // const userProfileValidation = yup.object().shape({});
-  // const {
-  //   errors,
-  //   values,
-  //   isSubmitting,
-  //   touched,
-  //   handleBlur,
-  //   handleChange,
-  //   handleSubmit,
-  // } = useFormik({
-  //   initialValues: {
-  //     email: "",
-  //     birthDay: "",
-  //     location: "",
-  //     currentPasswrod: "",
-  //     newPassword: "",
-  //     confirmPassword: "",
-  //   },
-  //   validationSchema: "yup schema",
-  //   onSubmit: (values, actions) => {},
-  // });
   return (
     <>
       <Header />
       <main className="userProfileCustomization">
-        <form className="userProfileForm">
+        <form className="userProfileForm" onSubmit={handleSubmit}>
           <Typography color="white" variant="h4" gutterBottom>
             User Profile
           </Typography>
           <div className="info">
-            <Typography color="white" variant="h6" gutterBottom>
+            <Typography
+              color="white"
+              variant="h6"
+              style={{ marginLeft: "20px" }}
+              gutterBottom
+            >
               Personal Information
             </Typography>
             <div className="field">
               <label>Email</label>
               <TextField
                 fullWidth
-                value={userEmail}
-                onChange={(e) => setUserEmail(e.target.value)}
+                name="email"
+                value={values.email ? values.email : ""}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={Boolean(errors.email)}
+                helperText={
+                  touched.email && Boolean(errors.email) ? errors.email : ""
+                }
               />
             </div>
-            <div className="field">
+            <div className="field birthday">
               <label>Day of birth</label>
               <div className="date">
                 <TextField
-                  placeholder="DD"
-                  type="number"
-                  InputProps={maxNumberProps(1, 31)}
-                />
-                <TextField
-                  placeholder="MM"
-                  type="number"
-                  InputProps={maxNumberProps(2, 12)}
-                />
-                <TextField
-                  placeholder="YYYY"
-                  type="number"
-                  InputProps={maxNumberProps(1900, new Date().getFullYear())}
+                  type="date"
+                  fullWidth
+                  defaultValue={values.birthday}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={Boolean(errors.birthday)}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  helperText={
+                    touched.birthday && Boolean(errors.birthday)
+                      ? errors.birthday
+                      : ""
+                  }
                 />
               </div>
             </div>
@@ -152,30 +177,96 @@ function UserProfile() {
               <Select
                 styles={multiSelectStyle}
                 id="select"
+                name="location"
                 options={countryOptions}
+                onChange={(e) => setFieldValue("location", e.label)}
+                onBlur={handleBlur}
               />
             </div>
+            <Typography variant="caption" style={errorStyle}>
+              {touched.location && Boolean(errors.location)
+                ? errors.location
+                : ""}
+            </Typography>
             <div className="field lang">
               <label>Languages</label>
               <Select
                 styles={multiSelectStyle}
                 isMulti
                 id="select"
+                name="languages"
                 options={languageOptions}
+                value={values.languages}
+                onChange={(e) => setFieldValue("languages", e)}
+                onBlur={handleBlur}
+                error={Boolean(errors.languages)}
+                helperText={
+                  touched.languages && Boolean(errors.languages)
+                    ? errors.languages
+                    : ""
+                }
               />
             </div>
+            <Typography variant="caption" style={errorStyle}>
+              {touched.languages && Boolean(errors.languages)
+                ? errors.languages
+                : ""}
+            </Typography>
             <div className="field col">
               <Typography variant="h6" gutterBottom>
                 Change Password
               </Typography>
-              <TextField placeholder="Current Password" fullWidth />
-              <TextField placeholder="New Password" fullWidth />
-              <TextField placeholder="Confirm Password" fullWidth />
+              <TextField
+                placeholder="Current Password"
+                name="currentPassword"
+                value={values.currentPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                fullWidth
+                type="password"
+                error={Boolean(errors.currentPassword)}
+                helperText={
+                  touched.currentPassword && Boolean(errors.currentPassword)
+                    ? errors.currentPassword
+                    : ""
+                }
+              />
+              <TextField
+                placeholder="New Password"
+                name="newPassword"
+                value={values.newPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                fullWidth
+                type="password"
+                error={Boolean(errors.newPassword)}
+                helperText={
+                  touched.newPassword && Boolean(errors.newPassword)
+                    ? errors.newPassword
+                    : ""
+                }
+              />
+              <TextField
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={values.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                fullWidth
+                type="password"
+                error={Boolean(errors.confirmPassword)}
+                helperText={
+                  touched.confirmPassword && Boolean(errors.confirmPassword)
+                    ? errors.confirmPassword
+                    : ""
+                }
+              />
               <Button
                 variant="outlined"
                 color="secondary"
                 style={{ marginTop: "15px" }}
-                // type="submit"
+                type="submit"
+                disabled={isSubmitting}
               >
                 Save
               </Button>
