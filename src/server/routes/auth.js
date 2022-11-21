@@ -1,4 +1,5 @@
 const express = require("express");
+const { cookieCheck } = require("../middlewares/cookies");
 const router = express.Router();
 const User = require("../schemas/user");
 const { parseCookie, checkForSession, deleteSession } = require("../utils");
@@ -64,25 +65,22 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/logout", async (req, res) => {
+router.get("/logout",cookieCheck,async (req, res) => {
   try{
-    if(req.headers.cookie){
     const cookie = parseCookie(req.headers.cookie);
     //clear cookie there removing session on client side and delete session from db
     const deletedSession=await deleteSession(cookie.session_id);
     res.clearCookie("session_id");
     if(deletedSession) res.status(200).send({message:"User logged out"});
     else res.status(200).send({message:"Session expired"});
-    }else res.status(200).send({message:"Session expired"});
   }catch(err){
     res.status(500).send(err.message);
   }
 });
 
 
-router.get("/session",async (req,res)=>{
+router.get("/session",cookieCheck,async (req,res)=>{
   try{
-    if(req.headers.cookie){
     const cookie = parseCookie(req.headers.cookie);
     const sessionObject = await checkForSession(cookie.session_id);
     if(!sessionObject) return res.status(401).send({message:"Unauthorized"});
@@ -93,9 +91,6 @@ router.get("/session",async (req,res)=>{
     }else{
       res.status(204).send({message:"Session expired"});
     }
-  }else{
-    res.status(401).send({message:"Session expired"});
-  }
 }catch(err){
   res.status(500).send(err.message);
 }
