@@ -6,10 +6,14 @@ import "./Dashboard.scss";
 import { ReactComponent as DiscordLogo } from "../../assets/discord-icon.svg";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import BuildIcon from "@mui/icons-material/Build";
+import Banner from "../../assets/valorant/banner.jpg";
+import { useNavigate } from "react-router-dom";
+import SavedSearchIcon from "@mui/icons-material/SavedSearch";
 
 function Dashboard({ friendListAnchor, setFriendListAnchor }) {
   const { user } = useSelector((state) => state.auth);
   const isMobile = useMediaQuery("(max-width:600px)");
+  const navigate = useNavigate();
 
   return (
     <>
@@ -79,11 +83,16 @@ function Dashboard({ friendListAnchor, setFriendListAnchor }) {
             </div>
           </section>
           {/* Right side */}
-          <section className="dashboard-new">
-            <Typography variant="h6">Info Banner</Typography>
-            <section className="dashboard-friendlist">
-              {/* TODO: display some new feature info banner */}
-            </section>
+          <section
+            className="dashboard-new"
+            onClick={() => navigate("/discover")}
+          >
+            <img src={Banner} />
+            <div className="overlay-shadow" />
+            <Typography variant={`${isMobile ? "h5" : "h3"}`}>
+              <SavedSearchIcon fontSize={isMobile ? "40px" : "30px"}/>
+              Discover New Players
+            </Typography>
           </section>
         </article>
       </main>
