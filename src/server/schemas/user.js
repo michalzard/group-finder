@@ -31,9 +31,21 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
-    friends:[{type:mongoose.Types.ObjectId,ref:"User"}],
-    // blocked:[{type:mongoose.Types.ObjectId,ref:"User"}],
+    friends: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    birthday: {
+      type: Date,
+      default: Date.now(),
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    languages: [
+      {
+        type: String,
+        default: { value: "en", label: "English" },
+      },
+    ],
   },
   { timestamps: true }
 );
@@ -42,7 +54,7 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   try {
     this.password = await bcrypt.hash(this.password, 12);
-    this.id = v4();//to make sure unique ide is generated every time
+    this.id = v4(); //to make sure unique ide is generated every time
     return next();
   } catch (err) {
     return next(err);
@@ -62,20 +74,20 @@ userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   delete obj._id;
-  delete obj.__v; 
+  delete obj.__v;
   delete obj.friends;
   delete obj.updatedAt;
   return obj;
 };
 
 userSchema.methods.acceptFriend = function (requesterId) {
-  if(!this.friends.includes(requesterId)){
+  if (!this.friends.includes(requesterId)) {
     this.friends.push(requesterId);
     this.save();
     return true;
-  }else{
+  } else {
     return false;
   }
-}
+};
 
 module.exports = mongoose.model("User", userSchema);
