@@ -24,25 +24,17 @@ function FriendStatus() {
   const navigate = useNavigate();
 
   const isMobile = useMediaQuery("(max-width:600px)");
-  const { list, presence , requests } = useSelector((state) => state.friends);
+  const { list, presence, requests } = useSelector((state) => state.friends);
 
   const handleNumber = (number, max) => {
     if (!max) return number;
     if (number < max) return number;
     else return `${max}+`;
   };
-
+  
   const friendsOnline = () => {
     //eslint-disable-next-line
-    const onlineFriends = list
-      .map((friend) => {
-        if (presence.includes(friend.id)) {
-          return friend;
-        }
-      })
-      .filter((f) => {
-        return f;
-      });
+    const onlineFriends = list.map((friend) => { if (presence.includes(friend.id)) { return friend; } else return;}).filter((f) => {return f;});
     return onlineFriends.length > 0 ? onlineFriends.length : "";
   };
 
@@ -51,9 +43,7 @@ function FriendStatus() {
       case "all":
         return <AllFriends />;
       case "online":
-        return (
-          <OnlineFriends amount={friendsOnline()} handleNumber={handleNumber} />
-        );
+        return <OnlineFriends amount={friendsOnline()} handleNumber={handleNumber} />
       case "pending":
         return <AllPendingRequests />;
       case "add":
@@ -99,7 +89,11 @@ function FriendStatus() {
             navigate("/friends/pending");
           }}
         >
-          Pending - {handleNumber(requests[0].requests.length + requests[1].requests.length ,99)}
+          Pending -{" "}
+          {handleNumber(
+            requests[0].requests.length + requests[1].requests.length,
+            99
+          )}
         </Button>
         <Button
           variant="contained"
