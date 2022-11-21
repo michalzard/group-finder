@@ -41,7 +41,7 @@ function App() {
 
       </Route>
       
-      <Route path="/profile" element={<UserProfile/>}/>
+      <Route path="/profile" element={ !isLoggedIn && !loading ? <Navigate to="/"/> : <UserProfile/>}/>
 
       <Route path="*" element={<Navigate to="/dashboard"/>}/>
     </Routes>
