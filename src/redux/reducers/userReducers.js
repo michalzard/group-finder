@@ -78,23 +78,13 @@ export const userLogout = createAsyncThunk(
 
 export const userUpdate = createAsyncThunk(
   "User/Update",
-  async (
-    {
-      /**email,birthday all that */
-    },
-    thunkApi
-  ) => {
+  async (values, thunkApi) => {
     return await axios
-      .patch(
-        `${process.env.REACT_APP_API_URL}/user/update`,
-        {},
-        {
-          withCredentials: true,
-        }
-      )
+      .patch(`${process.env.REACT_APP_API_URL}/user/update`, values, {
+        withCredentials: true,
+      })
       .then((data) => {
-        const {} = data.data;
-        return; //
+        return data.data;
       })
       .catch((err) => {
         return thunkApi.rejectWithValue(err.response.data.message);

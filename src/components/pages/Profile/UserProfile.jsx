@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Header from "../../Header";
 import "./UserProfile.scss";
 import Select from "react-select";
@@ -8,35 +8,35 @@ import * as yup from "yup";
 
 import Countries from "../countries.json";
 import Languages from "../languages.json";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userUpdate } from "../../../redux/reducers/userReducers";
 
 function UserProfile() {
-  const { email } = useSelector((state) => state.auth.user);
+  const { email, languages, location, birthday } = useSelector(
+    (state) => state.auth.user
+  );
+
+  const loadJSON = (list) => {
+    const result = [];
+    for (let i = 0; i < Object.keys(list).length; i++) {
+      const v = Object.values(list)[i];
+      const k = Object.keys(list)[i];
+      result.push({ value: k, label: v });
+    }
+    return result;
+  };
 
   const loadCountryList = useCallback(() => {
-    const list = [];
-    for (let i = 0; i < Object.keys(Countries).length; i++) {
-      const v = Object.values(Countries)[i];
-      const k = Object.keys(Countries)[i];
-      list.push({ value: k, label: v });
-    }
-    return list;
+    return loadJSON(Countries);
   }, []);
 
   const loadLanguageList = useCallback(() => {
-    const list = [];
-    for (let i = 0; i < Object.keys(Languages).length; i++) {
-      const v = Object.values(Languages)[i];
-      const k = Object.keys(Languages)[i];
-      list.push({ value: k, label: v });
-    }
-    return list;
+    return loadJSON(Languages);
   }, []);
 
   const [countryOptions, setCountryOptions] = useState([]);
-
   const [languageOptions, setLanguageOptions] = useState([]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setCountryOptions(loadCountryList());
     setLanguageOptions(loadLanguageList());
@@ -104,14 +104,15 @@ function UserProfile() {
       email,
       birthday: new Date().toISOString().substring(0, 10),
       location: "",
-      languages: [],
+      languages: [], //generate language objects from srvr response that returns just strings of langs
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
     validationSchema: userProfileValidation,
     onSubmit: (values, actions) => {
-      console.log(values, actions);
+      dispatch(userUpdate(values));
+      actions.setSubmitting(false);
     },
   });
 
@@ -120,6 +121,38 @@ function UserProfile() {
     marginLeft: "25px",
   };
 
+  const langInputRef = useRef(null);
+  const locationRef = useRef(null);
+
+  /**
+   * I should be using callback ref 
+   * https://stackoverflow.com/questions/55838351/how-do-we-know-when-a-react-ref-current-value-has-changed
+   * 
+   */
+  useEffect(() => {
+    const options = locationRef.current.props.options;
+    const locationObj = options.filter((loc) => loc.label === location)[0];
+    if (locationObj) {
+      setFieldValue("location", locationObj);
+    }
+    return () => setFieldValue("location", []);
+    //eslint-disable-next-line
+  }, [locationRef.current, setFieldValue, location]);
+
+  useEffect(() => {
+    const props = langInputRef.current.props;
+    const options = props.options;
+    if (options.length > 0) {
+      const localLang = options.filter(
+        (lang) => lang.value === navigator.language.split("-")[0]
+      )[0];
+      setFieldValue("languages", [localLang]);
+    }
+    return () => setFieldValue("languages", []);
+    //eslint-disable-next-line
+  }, [langInputRef.current, setFieldValue]);
+
+  console.log(values);
   return (
     <>
       <Header />
@@ -152,7 +185,7 @@ function UserProfile() {
               />
             </div>
             <div className="field birthday">
-              <label>Day of birth</label>
+              <label>Date of birth</label>
               <div className="date">
                 <TextField
                   type="date"
@@ -179,8 +212,11 @@ function UserProfile() {
                 id="select"
                 name="location"
                 options={countryOptions}
-                onChange={(e) => setFieldValue("location", e.label)}
+                value={values.location}
+                //setFieldValue("location", e.label)
+                onChange={(e) => setFieldValue("location", e)}
                 onBlur={handleBlur}
+                ref={locationRef}
               />
             </div>
             <Typography variant="caption" style={errorStyle}>
@@ -205,6 +241,7 @@ function UserProfile() {
                     ? errors.languages
                     : ""
                 }
+                ref={langInputRef}
               />
             </div>
             <Typography variant="caption" style={errorStyle}>
