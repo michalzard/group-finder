@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userLogin, userLogout, userRegister, userSession } from "../reducers/userReducers";
+import {
+  userLogin,
+  userLogout,
+  userRegister,
+  userSession,
+  userUpdate,
+} from "../reducers/userReducers";
 
 const authSlice = createSlice({
   name: "Auth",
@@ -9,8 +15,19 @@ const authSlice = createSlice({
     loading: false,
     error: "",
     success: "",
+    feedback: {
+      open: false,
+      message: "",
+      type: "",
+    },
   },
-  //   reducers: {},
+  reducers:{
+    clearFeedback:(state)=>{
+      state.feedback.open = false;
+      state.feedback.message = "";
+      state.feedback.type = "";
+    }
+  },
   extraReducers: {
     //userLogin
     [userLogin.pending]: (state) => {
@@ -68,22 +85,41 @@ const authSlice = createSlice({
     [userRegister.pending]: (state) => {
       state.loading = true;
     },
-    [userRegister.fulfilled]: (state,action) => {
+    [userRegister.fulfilled]: (state, action) => {
       state.loading = false;
-      const {user,message} = action.payload;
-      state.isLoggedIn=true;
+      const { user, message } = action.payload;
+      state.isLoggedIn = true;
       state.user = user;
-      state.success=message;
-      state.error="";
+      state.success = message;
+      state.error = "";
     },
-    [userRegister.rejected]: (state,action) => {
+    [userRegister.rejected]: (state, action) => {
       state.loading = false;
-      state.isLoggedIn=false;
+      state.isLoggedIn = false;
       state.error = action.payload;
+    },
+    [userUpdate.pending]: (state, { payload }) => {
+      state.loading = true;
+    },
+    [userUpdate.fulfilled]: (state, { payload }) => {
+      state.loading = true;
+      const { message, user } = payload;
+      state.user = user;
+      state.feedback = {
+        open: true,
+        message,
+        type: "success",
+      };
+    },
+    [userUpdate.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.feedback = {
+        open: true,
+        message: payload,
+        type: "error",
+      };
     },
   },
 });
-
-// export const {} = authSlice.actions;
-
+export const {clearFeedback} = authSlice.actions;
 export default authSlice.reducer;

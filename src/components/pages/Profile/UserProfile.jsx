@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Alert, Button, Snackbar, TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Header from "../../Header";
 import "./UserProfile.scss";
@@ -10,11 +10,13 @@ import Countries from "../countries.json";
 import Languages from "../languages.json";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdate } from "../../../redux/reducers/userReducers";
+import { clearFeedback } from "../../../redux/slices/authSlice";
 
 function UserProfile() {
   const { email, languages, location, birthday } = useSelector(
     (state) => state.auth.user
   );
+  const feedback = useSelector((state) => state.auth.feedback);
 
   const loadJSON = (list) => {
     const result = [];
@@ -43,13 +45,14 @@ function UserProfile() {
   }, [loadCountryList, loadLanguageList]);
 
   const multiSelectStyle = {
-    control: (styles) => ({ ...styles, backgroundColor: "#1e2024" }),
+    control: (styles) => ({ ...styles, backgroundColor: "#1e2024",maxHeight:"200px" }),
     option: (styles, { isFocused }) => {
       return {
         ...styles,
         backgroundColor: isFocused ? "hsl(297, 65%, 71%);" : "#1e2024",
       };
     },
+
     multiValue: (styles) => {
       return {
         ...styles,
@@ -80,7 +83,8 @@ function UserProfile() {
     //email,birthday,location,languages,current,new,confirm  passwords
     email: yup.string().email("Enter valid email").required(),
     birthday: yup.date().required(),
-    location: yup.string().required(),
+    location: yup.object().required(),
+    languages: yup.array().min(1, "You need to select atleast 1 language"),
     currentPassword: yup.string().min(5).max(30).notRequired(),
     newPassword: yup.string().min(5).max(30).notRequired(),
     confirmPassword: yup
@@ -102,8 +106,10 @@ function UserProfile() {
   } = useFormik({
     initialValues: {
       email,
-      birthday: new Date().toISOString().substring(0, 10),
-      location: "",
+      birthday: birthday
+        ? new Date().toISOString(birthday).substring(0, 10)
+        : new Date().toISOString().substring(0, 10),
+      location: { value: "sk", label: "Slovakia" },
       languages: [], //generate language objects from srvr response that returns just strings of langs
       currentPassword: "",
       newPassword: "",
@@ -124,35 +130,41 @@ function UserProfile() {
   const langInputRef = useRef(null);
   const locationRef = useRef(null);
 
-  /**
-   * I should be using callback ref 
-   * https://stackoverflow.com/questions/55838351/how-do-we-know-when-a-react-ref-current-value-has-changed
-   * 
-   */
   useEffect(() => {
-    const options = locationRef.current.props.options;
-    const locationObj = options.filter((loc) => loc.label === location)[0];
-    if (locationObj) {
+    const props = locationRef.current.props;
+    const options = props.options;
+    if (options.length > 0) {
+      const locationObj = options.filter((l) => l.label === location)[0];
       setFieldValue("location", locationObj);
     }
-    return () => setFieldValue("location", []);
+    return () => setFieldValue("location", {});
     //eslint-disable-next-line
-  }, [locationRef.current, setFieldValue, location]);
+  }, [locationRef.current, setFieldValue]);
 
   useEffect(() => {
     const props = langInputRef.current.props;
     const options = props.options;
-    if (options.length > 0) {
-      const localLang = options.filter(
-        (lang) => lang.value === navigator.language.split("-")[0]
-      )[0];
-      setFieldValue("languages", [localLang]);
+    if (languages.length > 0) {
+      const langObjs = options
+        .map((l) => {
+          if (languages.includes(l.label)) return l;
+          else return null;
+        })
+        .filter((language) => language);
+
+      setFieldValue("languages", langObjs);
+    } else {
+      if (options.length > 0) {
+        const localLang = options.filter(
+          (lang) => lang.value === navigator.language.split("-")[0]
+        )[0];
+        setFieldValue("languages", [localLang]);
+      }
     }
     return () => setFieldValue("languages", []);
     //eslint-disable-next-line
   }, [langInputRef.current, setFieldValue]);
 
-  console.log(values);
   return (
     <>
       <Header />
@@ -213,7 +225,6 @@ function UserProfile() {
                 name="location"
                 options={countryOptions}
                 value={values.location}
-                //setFieldValue("location", e.label)
                 onChange={(e) => setFieldValue("location", e)}
                 onBlur={handleBlur}
                 ref={locationRef}
@@ -235,20 +246,25 @@ function UserProfile() {
                 value={values.languages}
                 onChange={(e) => setFieldValue("languages", e)}
                 onBlur={handleBlur}
-                error={Boolean(errors.languages)}
-                helperText={
-                  touched.languages && Boolean(errors.languages)
-                    ? errors.languages
-                    : ""
-                }
                 ref={langInputRef}
               />
             </div>
-            <Typography variant="caption" style={errorStyle}>
-              {touched.languages && Boolean(errors.languages)
-                ? errors.languages
-                : ""}
-            </Typography>
+            <div className="field col">
+              <Typography variant="caption" style={errorStyle}>
+                {touched.languages && Boolean(errors.languages)
+                  ? errors.languages
+                  : ""}
+              </Typography>
+              <Button
+                variant="outlined"
+                color="secondary"
+                style={{ margin: "15px 0" }}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                Save
+              </Button>
+            </div>
             <div className="field col">
               <Typography variant="h6" gutterBottom>
                 Change Password
@@ -261,6 +277,7 @@ function UserProfile() {
                 onBlur={handleBlur}
                 fullWidth
                 type="password"
+                autoComplete="password"
                 error={Boolean(errors.currentPassword)}
                 helperText={
                   touched.currentPassword && Boolean(errors.currentPassword)
@@ -276,6 +293,7 @@ function UserProfile() {
                 onBlur={handleBlur}
                 fullWidth
                 type="password"
+                autoComplete="new-password"
                 error={Boolean(errors.newPassword)}
                 helperText={
                   touched.newPassword && Boolean(errors.newPassword)
@@ -290,6 +308,7 @@ function UserProfile() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 fullWidth
+                autoComplete="confirm-password"
                 type="password"
                 error={Boolean(errors.confirmPassword)}
                 helperText={
@@ -311,6 +330,16 @@ function UserProfile() {
           </div>
         </form>
       </main>
+      <Snackbar
+        open={feedback.open}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        autoHideDuration={5000}
+        onClose={() => dispatch(clearFeedback())}
+      >
+        <Alert variant="filled" color={feedback.type}>
+          {feedback.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
