@@ -39,13 +39,14 @@ function UserProfile() {
   const [countryOptions, setCountryOptions] = useState([]);
   const [languageOptions, setLanguageOptions] = useState([]);
   const dispatch = useDispatch();
-  useEffect(() => {
-    setCountryOptions(loadCountryList());
-    setLanguageOptions(loadLanguageList());
-  }, [loadCountryList, loadLanguageList]);
 
   const multiSelectStyle = {
-    control: (styles) => ({ ...styles, backgroundColor: "#1e2024",maxHeight:"200px" }),
+    control: (styles) => ({
+      ...styles,
+      backgroundColor: "#1e2024",
+      maxHeight: 60,
+      overflowY: "scroll",
+    }),
     option: (styles, { isFocused }) => {
       return {
         ...styles,
@@ -109,7 +110,7 @@ function UserProfile() {
       birthday: birthday
         ? new Date().toISOString(birthday).substring(0, 10)
         : new Date().toISOString().substring(0, 10),
-      location: { value: "sk", label: "Slovakia" },
+      location: { value: "en", label: "United Kingdom" },
       languages: [], //generate language objects from srvr response that returns just strings of langs
       currentPassword: "",
       newPassword: "",
@@ -129,41 +130,44 @@ function UserProfile() {
 
   const langInputRef = useRef(null);
   const locationRef = useRef(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const props = locationRef.current.props;
-    const options = props.options;
-    if (options.length > 0) {
-      const locationObj = options.filter((l) => l.label === location)[0];
-      setFieldValue("location", locationObj);
-    }
-    return () => setFieldValue("location", {});
-    //eslint-disable-next-line
-  }, [locationRef.current, setFieldValue]);
+    setCountryOptions(loadCountryList());
+    setLanguageOptions(loadLanguageList());
+    setMounted(true);
+    return () => setMounted(false);
+  }, [loadCountryList, loadLanguageList]);
 
   useEffect(() => {
-    const props = langInputRef.current.props;
-    const options = props.options;
-    if (languages.length > 0) {
-      const langObjs = options
-        .map((l) => {
-          if (languages.includes(l.label)) return l;
-          else return null;
-        })
-        .filter((language) => language);
+    if (mounted) {
+      const props = langInputRef.current.props;
+      const options = props.options;
+      const props2 = locationRef.current.props;
+      const options2 = props2.options;
+      if (options2) {
+        const locationObj = options2.filter((l) => l.label === location)[0];
+        setFieldValue("location", locationObj);
+      }
 
-      setFieldValue("languages", langObjs);
-    } else {
-      if (options.length > 0) {
-        const localLang = options.filter(
-          (lang) => lang.value === navigator.language.split("-")[0]
-        )[0];
-        setFieldValue("languages", [localLang]);
+      if (languages.length > 0 && options) {
+        const langObjs = options
+          .map((l) => {
+            if (languages.includes(l.label)) return l;
+            else return null;
+          })
+          .filter((language) => language);
+        setFieldValue("languages", langObjs);
+      } else {
+        if (options.length > 0) {
+          const localLang = options.filter(
+            (lang) => lang.value === navigator.language.split("-")[0]
+          )[0];
+          setFieldValue("languages", [localLang]);
+        }
       }
     }
-    return () => setFieldValue("languages", []);
-    //eslint-disable-next-line
-  }, [langInputRef.current, setFieldValue]);
+  }, [mounted, languages, location, setFieldValue]);
 
   return (
     <>
@@ -230,6 +234,12 @@ function UserProfile() {
                 ref={locationRef}
               />
             </div>
+            <Typography variant="caption" style={errorStyle}>
+              {touched.location && Boolean(errors.location)
+                ? errors.location
+                : ""}
+            </Typography>
+
             <Typography variant="caption" style={errorStyle}>
               {touched.location && Boolean(errors.location)
                 ? errors.location
