@@ -4,6 +4,7 @@ import {Routes,Route, Navigate} from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { userSession } from './redux/reducers/userReducers';
 import { LinearProgress } from '@mui/material';
+const Faq = lazy(()=>import('./components/pages/Faq'));
 const UserProfile = lazy(()=>import('./components/pages/Profile/UserProfile'));
 const LandingPage = lazy(()=>import('./components/pages/LandingPage'));
 const LoginPage = lazy(()=>import('./components/pages/auth/LoginPage'));
@@ -38,10 +39,11 @@ function App() {
         
       <Route path=":display" element={<FriendStatus/>}/>
       <Route path="dm/:id" element={<Chat/>}/>
-
       </Route>
-      
+
       <Route path="/profile" element={ !isLoggedIn && !loading ? <Navigate to="/"/> : <UserProfile/>}/>
+      <Route path="/faq" element={<Faq/>}/>
+
 
       <Route path="*" element={<Navigate to="/dashboard"/>}/>
     </Routes>
