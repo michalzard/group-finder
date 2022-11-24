@@ -31,11 +31,19 @@ function FriendStatus() {
     if (number < max) return number;
     else return `${max}+`;
   };
-  
+
   const friendsOnline = () => {
     //eslint-disable-next-line
-    const onlineFriends = list.map((friend) => { if (presence.includes(friend.id)) { return friend; } else return;}).filter((f) => {return f;});
-    return onlineFriends.length > 0 ? onlineFriends.length : "";
+    const onlineFriends = list
+      .map((friend) => {
+        if (presence.includes(friend.id)) {
+          return friend;
+        } else return null;
+      })
+      .filter((f) => {
+        return f;
+      });
+    return onlineFriends.length > 0 ? onlineFriends.length : 0;
   };
 
   const renderStatus = (display) => {
@@ -43,7 +51,9 @@ function FriendStatus() {
       case "all":
         return <AllFriends />;
       case "online":
-        return <OnlineFriends amount={friendsOnline()} handleNumber={handleNumber} />
+        return (
+          <OnlineFriends amount={friendsOnline()} handleNumber={handleNumber} />
+        );
       case "pending":
         return <AllPendingRequests />;
       case "add":

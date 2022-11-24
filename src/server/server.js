@@ -6,10 +6,16 @@ const mongoStore = require("connect-mongodb-session")(session);
 const cors = require("cors");
 require("dotenv").config();
 
-mongoose.connect(`${process.env.DB_URI}`, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-},()=>{console.log(`database connected`)});
+mongoose.connect(
+  `${process.env.DB_URI}`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => {
+    console.log(`database connected`);
+  }
+);
 
 const dbStore = new mongoStore({
   uri: process.env.DB_URI,
@@ -41,11 +47,13 @@ const authRoute = require("./routes/auth");
 const friendsRoute = require("./routes/friends");
 const chatRoute = require("./routes/chat");
 const userRoute = require("./routes/user");
+const feedbackRoute = require("./routes/feedback");
 
 app.use("/auth", authRoute);
 app.use("/friends", friendsRoute);
-app.use("/chat",chatRoute);
-app.use("/user",userRoute);
+app.use("/chat", chatRoute);
+app.use("/user", userRoute);
+app.use("/feedback",feedbackRoute);
 
 app.use(express.static("src/assets")); //staticly served assets like pictures
 

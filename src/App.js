@@ -44,7 +44,6 @@ function App() {
       <Route path="/profile" element={ !isLoggedIn && !loading ? <Navigate to="/"/> : <UserProfile/>}/>
       <Route path="/faq" element={<Faq/>}/>
 
-
       <Route path="*" element={<Navigate to="/dashboard"/>}/>
     </Routes>
   </Suspense>

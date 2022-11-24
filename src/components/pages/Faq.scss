@@ -1,0 +1,28 @@
+@import "../../Theme.scss";
+
+.faq {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .MuiAccordion-root {
+    margin: 2px 0;
+    width: 50%;
+    background-color: $gradient-purple;
+    color: lightgray;
+    svg {
+      color: lightgray;
+    }
+  }
+  button {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .MuiAccordion-root {
+    width: 90% !important;
+  }
+}

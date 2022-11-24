@@ -22,8 +22,9 @@ header {
     color: lightgray;
     text-decoration: none;
   }
-  a:hover,svg:hover{
-    color:white;
+  a:hover,
+  svg:hover {
+    color: white;
   }
 
   img {
@@ -76,7 +77,28 @@ header {
 #userProfileMenu > .MuiPaper-root {
   background-color: $surface;
   color: white;
-  svg{
-    margin-right:5px;
+  svg {
+    margin-right: 5px;
   }
+}
+
+#feedBackDialog > div > .MuiPaper-root {
+  background-color: $surface;
+  color: white;
+  width: 500px;
+  .MuiDialogContent-root {
+    div {
+      border-radius: 5px;
+    }
+    label,
+    input,
+    textarea {
+      color: white;
+    }
+  }
+  #feedback-select > div {
+    background-color: $surface ;
+    margin-bottom: 15px;
+  }
+  
 }

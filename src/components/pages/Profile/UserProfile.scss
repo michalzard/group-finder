@@ -1,23 +1,18 @@
 @import "../../../Theme.scss";
 @import "../../../global.scss";
 
-.userProfileCustomization {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .userProfileForm {
-  height: $fullHeight-with-navbar;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   font-family: Roboto, sans-serif;
   color: white;
+  height: $fullHeight-with-navbar;
   .info {
     background-color: $surface;
     border-radius: 15px;
     padding: 15px;
-    width: 100%;
   }
   .field {
     display: flex;
@@ -29,9 +24,10 @@
       margin-left: calc($labelMargin / 2);
     }
     .date {
+      width: 100%;
       div {
-        margin: 5px;
-        width: 310px;
+        margin: 5px 0;
+        width: 100%;
       }
     }
     #select {
@@ -74,5 +70,12 @@
 
 //mobile
 @media (max-width: 600px) {
-  //todo
+  .info {
+    border-radius: 0 !important;
+    padding: 15px 0 !important;
+  }
+  .userProfileForm {
+    justify-content: flex-start;
+  }
+
 }

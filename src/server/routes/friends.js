@@ -14,13 +14,13 @@ const { cookieCheck } = require("../middlewares/cookies");
 // DELETE
 
 router.get("/", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const { friends } = await User.findById(user_id).populate("friends", {
+    friends: 0,
+  }); //dont load friends of your friends
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const { friends } = await User.findById(user_id).populate("friends", {
-      friends: 0,
-    }); //dont load friends of your friends
     if (friends) res.status(200).send({ message: "Friend list", friends });
     else res.status(404).send({ message: "Unable to load friend list" });
   } catch (err) {
@@ -29,17 +29,17 @@ router.get("/", cookieCheck, async (req, res) => {
 });
 
 router.get("/requests", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const requester = await User.findById(user_id);
+  const userFilterOptions = { password: 0, _id: 0, updatedAt: 0 };
+  const friendRequests = await FriendRequest.find({
+    $or: [{ requester: user_id }, { recipient: user_id }],
+  })
+    .populate("recipient", userFilterOptions)
+    .populate("requester", userFilterOptions);
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const requester = await User.findById(user_id);
-    const userFilterOptions = { password: 0, _id: 0, updatedAt: 0 };
-    const friendRequests = await FriendRequest.find({
-      $or: [{ requester: user_id }, { recipient: user_id }],
-    })
-      .populate("recipient", userFilterOptions)
-      .populate("requester", userFilterOptions);
     if (friendRequests)
       res.status(200).send({
         message: "Friend Requests",
@@ -73,11 +73,11 @@ router.get("/requests", cookieCheck, async (req, res) => {
 });
 
 router.post("/request", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const { username } = req.body;
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const { username } = req.body;
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
     if (username) {
       const recipient = await User.findOne({ username });
       if (!recipient)
@@ -123,20 +123,20 @@ router.post("/request", cookieCheck, async (req, res) => {
 });
 
 router.patch("/accept", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const { requesterId } = req.body;
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const requester = await User.findOne({ id: requesterId });
+  const recipient = await User.findById(user_id);
+  const friendRequest = await FriendRequest.findOne({
+    recipient: user_id,
+    requester: requester._id,
+    status: "pending",
+  })
+    .populate("recipient")
+    .populate("requester");
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const { requesterId } = req.body;
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const requester = await User.findOne({ id: requesterId });
-    const recipient = await User.findById(user_id);
-    const friendRequest = await FriendRequest.findOne({
-      recipient: user_id,
-      requester: requester._id,
-      status: "pending",
-    })
-      .populate("recipient")
-      .populate("requester");
     if (friendRequest) {
       recipient.acceptFriend(requester._id);
       requester.acceptFriend(recipient._id);
@@ -158,12 +158,12 @@ router.patch("/accept", cookieCheck, async (req, res) => {
 });
 
 router.patch("/decline", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const { requesterId } = req.body;
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const requester = await User.findOne({ id: requesterId });
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const { requesterId } = req.body;
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const requester = await User.findOne({ id: requesterId });
     if (!requester) return res.status(404).send({ message: "Bad Request" });
     const declinedRequest = await FriendRequest.findOneAndDelete({
       requester: requester._id,
@@ -185,17 +185,17 @@ router.patch("/decline", cookieCheck, async (req, res) => {
 });
 
 router.patch("/cancel", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const { recipientId } = req.body;
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const recipient = await User.findOne({ id: recipientId });
+  const cancelledRequest = await FriendRequest.findOneAndDelete({
+    requester: user_id,
+    recipient: recipient._id,
+    status: "pending",
+  });
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const { recipientId } = req.body;
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const recipient = await User.findOne({ id: recipientId });
-    const cancelledRequest = await FriendRequest.findOneAndDelete({
-      requester: user_id,
-      recipient: recipient._id,
-      status: "pending",
-    });
     if (cancelledRequest) {
       res.status(200).send({
         message: "Outgoing friend request cancelled",
@@ -210,13 +210,13 @@ router.patch("/cancel", cookieCheck, async (req, res) => {
 });
 
 router.delete("/remove", cookieCheck, async (req, res) => {
+  const cookie = parseCookie(req.headers.cookie);
+  const { friendId } = req.query;
+  const session = await checkForSession(cookie.session_id);
+  const { user_id } = session.session;
+  const user = await User.findById(user_id).populate("friends");
+  const friend = await User.findOne({ id: friendId }).populate("friends");
   try {
-    const cookie = parseCookie(req.headers.cookie);
-    const { friendId } = req.query;
-    const session = await checkForSession(cookie.session_id);
-    const { user_id } = session.session;
-    const user = await User.findById(user_id).populate("friends");
-    const friend = await User.findOne({ id: friendId }).populate("friends");
     if (user && friend) {
       //index used to remove friend from user's friend list
       const removeUserFriendListIndex = user.friends
