@@ -12,7 +12,6 @@ router.post("/new", cookieCheck, async (req, res) => {
   const sessionObj = await checkForSession(cookie.session_id);
   const { user_id } = sessionObj.session;
   const { title, text } = req.body;
-  console.log(user_id, title, text);
   const submittedFeedback = new Feedback({
     title,
     feedback: text,
@@ -21,7 +20,7 @@ router.post("/new", cookieCheck, async (req, res) => {
   try {
     if (submittedFeedback) {
       await submittedFeedback.save();
-      res.status(204);
+      res.status(200).send({ message: "Feedback submitted successfully" });
     } else {
       res.status(404).send({ message: "Title or feedback text is missing" });
     }

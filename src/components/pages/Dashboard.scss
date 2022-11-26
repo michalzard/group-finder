@@ -27,6 +27,8 @@
     border-radius: 10px;
     padding: 20px;
     margin: 20px 0;
+    box-shadow: 5px 5px 5px black;
+
     .info {
       max-width: 320px;
       flex: 1;
@@ -53,6 +55,7 @@
     margin: 15px;
     width: 50%;
     position: relative;
+    box-shadow: 5px 5px 3px black;
     cursor: pointer;
     img,
     .overlay-shadow {

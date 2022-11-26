@@ -1,0 +1,73 @@
+@import "../../../global.scss";
+@import "../../../Theme.scss";
+
+.profile-prompt {
+  width: 100vw;
+  height: $fullHeight-with-navbar;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .prompt-content {
+    display: flex;
+    align-items: center;
+    min-height: 400px;
+
+    .sidebar-info {
+      flex: 0.7;
+      p:not(:last-child) {
+        color: gray;
+      }
+    }
+    .choose-game {
+      flex: 1;
+      background-color: $surface;
+      height: inherit;
+      padding: 20px;
+      border-radius: 5px;
+      margin-left: 30px;
+      width: 600px;
+    }
+  }
+  .game-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  .game-link {
+    $svgSize: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    width: 330px;
+    border-radius: 10px;
+    cursor: pointer;
+    svg {
+      width: $svgSize;
+      height: $svgSize;
+    }
+    img {
+      width: $svgSize * 1.5;
+    }
+  }
+}
+
+.valorant {
+  background-color: crimson;
+}
+.csgo {
+  background-color: gold;
+}
+.rust {
+  background-color: $background;
+}
+
+//tablet
+@media (max-width: 1280px) {
+  .choose-game {
+    width: 0px !important;
+  }
+}

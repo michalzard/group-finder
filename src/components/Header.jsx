@@ -29,6 +29,7 @@ import Select from "react-select";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import GameProfileMenu from "./pages/Profile/GameProfileMenu";
 
 function Header() {
   const [menuAnchor, setMenuAnchor] = useState(null);
@@ -37,6 +38,8 @@ function Header() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  //game profile creation menu
+  const [gProfileAnchor, setGProfileAnchor] = useState(null);
 
   return (
     <header>
@@ -60,7 +63,7 @@ function Header() {
       <section className="menu">
         <AddCircleOutlineIcon
           className="plus"
-          onClick={() => navigate("/profilecreation")}
+          onClick={(e) => setGProfileAnchor(e.currentTarget)}
         />
         <DensityMediumIcon
           onClick={(e) => {
@@ -99,6 +102,7 @@ function Header() {
         </MenuItem>
       </Menu>
       <FeedbackDialog open={open} setOpen={setOpen} />
+      <GameProfileMenu anchor={gProfileAnchor} setAnchor={setGProfileAnchor} />
     </header>
   );
 }
@@ -164,9 +168,21 @@ function FeedbackDialog({ open, setOpen }) {
     },
     validationSchema: feedbackValidationSchema,
     onSubmit: (values, actions) => {
-      axios.post(`${process.env.REACT_APP_API_URL}/feedback/new`,{title:values.title.label,text:values.text},{withCredentials:true}).then(data=>{
-        console.log(data);
-      }).catch(err=>console.log(err));
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/feedback/new`,
+          { title: values.title.label, text: values.text },
+          { withCredentials: true }
+        )
+        .then((data) => {
+          const {message} = data.data;
+          console.log(message);
+          //TODO: display feedback popup on
+        })
+        .catch((err) => {
+          const {message} = err.response.data;
+          console.log("err",message);
+        });
       actions.resetForm();
       setOpen(false);
     },
@@ -211,7 +227,11 @@ function FeedbackDialog({ open, setOpen }) {
           <Button color="info" variant="outlined" type="submit">
             Submit
           </Button>
-          <Button color="error" variant="outlined" onClick={()=>setOpen(false)}>
+          <Button
+            color="error"
+            variant="outlined"
+            onClick={() => setOpen(false)}
+          >
             Cancel
           </Button>
         </DialogActions>
@@ -219,4 +239,3 @@ function FeedbackDialog({ open, setOpen }) {
     </Dialog>
   );
 }
-
