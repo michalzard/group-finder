@@ -4,8 +4,12 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userSession } from "./redux/reducers/userReducers";
 import { LinearProgress } from "@mui/material";
-import ProfileCreation from "./components/pages/Profile/ProfileCreation";
-import GameProfileCreator from "./components/pages/Profile/GameProfileCreator";
+const ProfileCreation = lazy(() =>
+  import("./components/pages/GameProfile/ProfileCreation")
+);
+const GameProfileCreator = lazy(() =>
+  import("./components/pages/GameProfile/GameProfileCreator")
+);
 const Faq = lazy(() => import("./components/pages/Faq"));
 const UserProfile = lazy(() =>
   import("./components/pages/Profile/UserProfile")
@@ -71,10 +75,27 @@ function App() {
             !isLoggedIn && !loading ? <Navigate to="/" /> : <UserProfile />
           }
         />
-        <Route path="/profile/new" element={<ProfileCreation />} />
+        <Route
+          path="/profile/new"
+          element={
+            !isLoggedIn && !loading ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <ProfileCreation />
+            )
+          }
+        />
 
-        <Route path="/creation/:game/:step" element={<GameProfileCreator />}/>
- 
+        <Route
+          path="/creation/:game/:step"
+          element={
+            !isLoggedIn && !loading ? (
+              <Navigate to="/dashboard" />
+            ) : (
+              <GameProfileCreator />
+            )
+          }
+        />
 
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>

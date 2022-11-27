@@ -1,0 +1,114 @@
+@import "../../../../global.scss";
+@import "../../../../Theme.scss";
+
+.background-image {
+  width: 100vw;
+  height: $fullHeight-with-navbar;
+  position: absolute;
+  background-position: center;
+  background-size: cover;
+  filter: blur(5px);
+}
+
+.ign {
+  h5 {
+    margin: 1em 0;
+  }
+  input,
+  label {
+    color: white;
+  }
+  input {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+  }
+  form {
+    position: relative;
+  }
+  .info {
+    display: flex;
+
+    .ign-info-left {
+      margin-right: 15px;
+      border-right: 1px solid lightgray;
+      max-width: 250px;
+
+      p {
+        margin-right: 1em;
+      }
+
+      h6 {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+    .ign-info-right {
+      display: flex;
+      flex-direction: column;
+      min-width: 250px;
+      button {
+        align-self: flex-end;
+        margin-top: 5px;
+      }
+    }
+  }
+}
+.roles-explanation {
+  display: flex;
+
+  .roles-info {
+    margin-right: 20px;
+    width: 450px;
+    position: relative;
+    h6 {
+      display: flex;
+      margin-right: inherit;
+      align-items: center;
+      svg {
+        margin-right: 5px;
+      }
+    }
+
+    border-right: 1px solid lightgray;
+  }
+  .roles-select {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 300px;
+    button {
+      margin: 5px;
+      width: 45%;
+    }
+    button:last-child {
+      margin-top: 15px;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+  .role-button {
+    display: flex;
+    position: relative;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    margin: 10px;
+    padding: 0 10px;
+    border-radius: 5px;
+    width: 8em;
+    justify-content: space-between;
+    cursor: pointer;
+    .MuiCheckbox-root {
+      padding-right: 0;
+      svg {
+        color: $gradient-pink;
+      }
+    }
+  }
+}
+
+.rank-related {
+  display: flex;
+  position: relative;
+}
