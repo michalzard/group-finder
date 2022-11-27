@@ -4,8 +4,8 @@ import Header from "../../Header";
 import "./ProfileCreation.scss";
 import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as ValorantLogo } from "../../../assets/valorant/valorant-logo.svg";
-import { ReactComponent as CSGOLogo } from "../../../assets/csgo/csgo-logo.svg";
+import ValorantLogo from "../../../assets/valorant/valorant-logo.svg";
+import CSGOLogo from "../../../assets/csgo/csgo-logo.svg";
 import RustLogo from "../../../assets/rust/Rust-Game-Logo.png";
 
 function ProfileCreation() {
@@ -42,8 +42,8 @@ function ProfileCreation() {
           <section className="choose-game">
             <Typography>Choose your game.</Typography>
             <div className="game-list">
-              <GameProfileLink gameName={"valorant"} icon={<ValorantLogo />} />
-              <GameProfileLink gameName={"csgo"} icon={<CSGOLogo />} />
+              <GameProfileLink gameName={"valorant"} image={ValorantLogo} />
+              <GameProfileLink gameName={"csgo"} image={CSGOLogo} />
               <GameProfileLink gameName={"rust"} image={RustLogo} />
             </div>
           </section>
@@ -55,15 +55,14 @@ function ProfileCreation() {
 
 export default ProfileCreation;
 
-function GameProfileLink({ gameName, icon, image }) {
+function GameProfileLink({ gameName, image }) {
   const navigate = useNavigate();
-  if ((!gameName && !icon) || !image) return;
+  if (!gameName && !image) return;
   return (
     <section
       className={`game-link ${gameName}`}
       onClick={() => navigate(`/creation/${gameName.toLowerCase()}/1`)}
     >
-      {icon ? icon : null}
       {image ? <img src={image} alt={gameName} /> : null}
     </section>
   );

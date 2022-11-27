@@ -37,7 +37,7 @@
     justify-content: center;
   }
   .game-link {
-    $svgSize: 100px;
+    $imgSize: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,12 +45,10 @@
     width: 330px;
     border-radius: 10px;
     cursor: pointer;
-    svg {
-      width: $svgSize;
-      height: $svgSize;
-    }
     img {
-      width: $svgSize * 1.5;
+      height: $imgSize;
+      width: $imgSize * 1.5;
+      padding:10px;
     }
   }
 }
