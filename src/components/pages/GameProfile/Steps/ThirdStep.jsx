@@ -1,10 +1,12 @@
-import { Slider, Typography } from "@mui/material";
-import React from "react";
+import { Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Cypher from "../../../../assets/valorant/cypher.png";
-
-// import * as ranks from "../../../../assets/valorant/ranks/";
+import valoRanks from "../../../../assets/valorant/ranks/rankData";
 
 function ThirdStep({ game, nextStep }) {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState("plat1");
 
   return (
     <section className="rank-container">
@@ -15,10 +17,22 @@ function ThirdStep({ game, nextStep }) {
         }}
       />
       <div className="rank-related">
-        <Typography variant="h5">Select your rank</Typography>
-        <div className="ranks">
-          <RankRange/>
-        </div>
+        <Typography variant="h4" gutterBottom>
+          Select your rank
+        </Typography>
+        <YourRank selected={selected} setSelected={setSelected} />
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{
+            alignSelf: "flex-end",
+            marginTop: "5px",
+          }}
+          size="large"
+          onClick={() => navigate(`/creation/${game}/${nextStep}`)}
+        >
+          Continue
+        </Button>
       </div>
     </section>
   );
@@ -26,13 +40,30 @@ function ThirdStep({ game, nextStep }) {
 
 export default ThirdStep;
 
-function RankRange(){
-  return(
-    <div className="rank-range">
-    <Slider
-    style={{width:"400px"}}
-    value={[10,40]}
-    ></Slider>
+function YourRank({selected,setSelected}) {
+
+  return (
+    <div className="your_rank">
+      {valoRanks.map((vRank, i) => (
+        <RankButton
+          key={i}
+          imgSrc={vRank.src}
+          name={vRank.name}
+          selected={selected === vRank.name}
+          onSelect={setSelected}
+        />
+      ))}
     </div>
-  )
+  );
+}
+
+function RankButton({ imgSrc, name, selected, onSelect }) {
+  return (
+    <div
+      className={`rank_button ${selected ? "rank_selected" : ""}`}
+      onClick={() => onSelect(name)}
+    >
+      <img src={imgSrc} alt={name} />
+    </div>
+  );
 }

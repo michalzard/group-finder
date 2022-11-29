@@ -35,11 +35,10 @@ function StepNavigation({ activeStep }) {
     "Nickname",
     "Roles",
     "Rank",
-    "Age range",
-    "Playstyle",
-    "Location",
+    "Age",
     "Profile",
     "Discord",
+    "Summary",
   ];
   return (
     <Stepper

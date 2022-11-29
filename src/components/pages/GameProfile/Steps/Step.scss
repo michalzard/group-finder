@@ -111,4 +111,86 @@
 .rank-related {
   display: flex;
   position: relative;
+  flex-direction: column;
+  text-align: center;
+  h4 {
+    text-shadow: -2px 2px 4px black;
+  }
+  .your_rank {
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-wrap: wrap;
+    width: 400px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  .rank_button {
+    margin: 10px 15px;
+    img {
+      $imgsize: 45px;
+      width: $imgsize;
+      height: $imgsize;
+      cursor: pointer;
+      filter: grayscale(1);
+    }
+    img:hover {
+      filter: brightness(1.2);
+    }
+  }
+  .rank_selected {
+    img {
+      filter: brightness(1.2);
+    }
+  }
+}
+
+.age-step {
+  input {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    color: white;
+  }
+  .age-info {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    button {
+      background-color: rgba(0, 0, 0, 0.7);
+      margin-top: 5px;
+    }
+  }
+}
+
+.game-profile-container {
+  .game-profile-info {
+    display: flex;
+    align-items: center;
+    .info-left {
+      width: 320px;
+      margin-right: 20px;
+    }
+    .info-right {
+      width: 300px;
+      .MuiAvatar-root {
+        cursor: pointer;
+        filter: brightness(0.8);
+      }
+      .MuiAvatar-root:hover {
+        filter: brightness(1);
+      }
+      .avatar-overlay {
+        position: absolute;
+        z-index: 10;
+        font-size: 35px;
+        color: white;
+      }
+      .bio {
+        margin-top: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
