@@ -37,7 +37,7 @@ app.use(
   })
 );
 
-app.use(cors({ credentials: true, origin: true })); //enables cors
+app.use(cors({ credentials: true, origin: true })); //enables cors ,cookies - credentials
 app.use(express.json()); //enables json request bodies
 app.use(express.urlencoded({ extended: true })); //enables formdata/multiplart trough request bodies
 
@@ -48,12 +48,14 @@ const friendsRoute = require("./routes/friends");
 const chatRoute = require("./routes/chat");
 const userRoute = require("./routes/user");
 const feedbackRoute = require("./routes/feedback");
+const uploadRoute = require("./routes/file-upload");
 
 app.use("/auth", authRoute);
 app.use("/friends", friendsRoute);
 app.use("/chat", chatRoute);
 app.use("/user", userRoute);
-app.use("/feedback",feedbackRoute);
+app.use("/feedback", feedbackRoute);
+app.use("/upload", uploadRoute);
 
 app.use(express.static("src/assets")); //staticly served assets like pictures
 
