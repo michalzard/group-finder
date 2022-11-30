@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { parseCookie, checkForSession } = require("../utils");
 const ChatMessage = require("../schemas/chatMessage");
 const User = require("../schemas/user");
-const { cookieCheck } = require("../middlewares/cookies");
+const {
+  checkCookie,
+  parseCookie,
+  checkForSession,
+} = require("../middlewares/sessioncookies");
 
-router.get("/messages", cookieCheck, async (req, res) => {
+router.get("/messages", checkCookie, async (req, res) => {
   //return list of message with ids
 
   const cookie = parseCookie(req.headers.cookie);
@@ -35,7 +38,7 @@ router.get("/messages", cookieCheck, async (req, res) => {
   }
 });
 
-router.post("/new-message", cookieCheck, async (req, res) => {
+router.post("/new-message", checkCookie, async (req, res) => {
   //create new message
   //sender,recipient,content,timestamp
 

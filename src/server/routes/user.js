@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../schemas/user");
-const { cookieCheck } = require("../middlewares/cookies");
-const { parseCookie, checkForSession } = require("../utils");
+const { checkCookie,parseCookie,checkForSession } = require("../middlewares/sessioncookies");
 
-router.patch("/update", cookieCheck, async (req, res) => {
+router.patch("/update", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { session } = await checkForSession(cookie.session_id);
   const { user_id } = session;

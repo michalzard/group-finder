@@ -2,9 +2,12 @@ const express = require("express");
 const FriendRequest = require("../schemas/friendrequest");
 const User = require("../schemas/user");
 const router = express.Router();
-const { parseCookie, checkForSession } = require("../utils");
+const {
+  checkCookie,
+  parseCookie,
+  checkForSession,
+} = require("../middlewares/sessioncookies");
 const ChatMessage = require("../schemas/chatMessage");
-const { cookieCheck } = require("../middlewares/cookies");
 // GET / -> friend list
 // GET /requests -> friend requests
 // POST /request -> pending state , send info to recipient
@@ -13,7 +16,7 @@ const { cookieCheck } = require("../middlewares/cookies");
 // PATCH /cancel -> remove whole friend request object
 // DELETE
 
-router.get("/", cookieCheck, async (req, res) => {
+router.get("/", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const session = await checkForSession(cookie.session_id);
   const { user_id } = session.session;
@@ -28,7 +31,7 @@ router.get("/", cookieCheck, async (req, res) => {
   }
 });
 
-router.get("/requests", cookieCheck, async (req, res) => {
+router.get("/requests", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const session = await checkForSession(cookie.session_id);
   const { user_id } = session.session;
@@ -72,7 +75,7 @@ router.get("/requests", cookieCheck, async (req, res) => {
   }
 });
 
-router.post("/request", cookieCheck, async (req, res) => {
+router.post("/request", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { username } = req.body;
   const session = await checkForSession(cookie.session_id);
@@ -122,7 +125,7 @@ router.post("/request", cookieCheck, async (req, res) => {
   }
 });
 
-router.patch("/accept", cookieCheck, async (req, res) => {
+router.patch("/accept", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { requesterId } = req.body;
   const session = await checkForSession(cookie.session_id);
@@ -157,7 +160,7 @@ router.patch("/accept", cookieCheck, async (req, res) => {
   }
 });
 
-router.patch("/decline", cookieCheck, async (req, res) => {
+router.patch("/decline", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { requesterId } = req.body;
   const session = await checkForSession(cookie.session_id);
@@ -184,7 +187,7 @@ router.patch("/decline", cookieCheck, async (req, res) => {
   }
 });
 
-router.patch("/cancel", cookieCheck, async (req, res) => {
+router.patch("/cancel", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { recipientId } = req.body;
   const session = await checkForSession(cookie.session_id);
@@ -209,7 +212,7 @@ router.patch("/cancel", cookieCheck, async (req, res) => {
   }
 });
 
-router.delete("/remove", cookieCheck, async (req, res) => {
+router.delete("/remove", checkCookie, async (req, res) => {
   const cookie = parseCookie(req.headers.cookie);
   const { friendId } = req.query;
   const session = await checkForSession(cookie.session_id);

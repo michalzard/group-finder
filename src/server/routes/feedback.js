@@ -1,13 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { cookieCheck } = require("../middlewares/cookies");
-const { parseCookie, checkForSession } = require("../utils");
+const {
+  checkCookie,
+  parseCookie,
+  checkForSession,
+} = require("../middlewares/sessioncookies");
 const Feedback = require("../schemas/feedback");
 
 //User can only submit so they can access POST
 // admins will be able to read it aswell so they get GET aswell
 
-router.post("/new", cookieCheck, async (req, res) => {
+router.post("/new", checkCookie, async (req, res) => {
   const cookie = await parseCookie(req.headers.cookie);
   const sessionObj = await checkForSession(cookie.session_id);
   const { user_id } = sessionObj.session;
