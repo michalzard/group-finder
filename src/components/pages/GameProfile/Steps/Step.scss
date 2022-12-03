@@ -252,3 +252,16 @@
     }
   }
 }
+
+.game-profile-summary {
+  flex-direction: row !important;
+  .summary-labels {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+  .summary-values {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -1,6 +1,6 @@
-import { Button, Snackbar, Typography } from "@mui/material";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ReactComponent as DiscordLogo } from "../../../../assets/discord-logo.svg";
@@ -33,17 +33,21 @@ function SixthStep({ game, nextStep }) {
         .then((data) => {
           const { message, user } = data.data;
           if (user) {
+            setNotifOpen(true);
+            setNotifText(message);
             dispatch(updateUser({ updated: user }));
           }
         })
         .catch((err) => {
           //display error
-          console.log(err.message);
+          setNotifOpen(true);
+          setNotifText("Redirect code expired");
         });
     }
   }, [discordCode, dispatch, redirectURL]);
 
-  // https://cdn.discordapp.com/avatars/user_id/user_avatar.png
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notifText, setNotifText] = useState("");
 
   return (
     <section className="discord-oath">
@@ -82,6 +86,7 @@ function SixthStep({ game, nextStep }) {
         {id.length > 0 ? (
           <>
             <Typography className="discord-user" gutterBottom>
+              {/* https://cdn.discordapp.com/avatars/user_id/user_avatar.png */}
               <img
                 src={`${DISCORD_CDN}/avatars/${id}/${avatar}.webp?size=64`}
                 alt="discord avatar"
@@ -101,10 +106,17 @@ function SixthStep({ game, nextStep }) {
                     { withCredentials: true }
                   )
                   .then((data) => {
-                    const { updated } = data.data;
-                    if (updated) dispatch(updateUser({ updated }));
+                    const { updated, message } = data.data;
+                    if (updated) {
+                      setNotifOpen(true);
+                      setNotifText(message);
+                      dispatch(updateUser({ updated }));
+                    }
                   })
-                  .catch((err) => console.log("error", err));
+                  .catch((err) => {
+                    //display error
+                    console.error(err.message);
+                  });
               }}
             >
               Unlink your account
@@ -119,18 +131,29 @@ function SixthStep({ game, nextStep }) {
             Link your account
           </Button>
         )}
-        <Button variant="outlined" color="error" onClick={() => navigate(`/creation/${game}/${nextStep}`)}>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => navigate(`/creation/${game}/${nextStep}`)}
+        >
           Continue
         </Button>
       </div>
 
       <Snackbar
-        open={true}
+        open={notifOpen}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        onClose={() => console.log("snackbar closing")}
-        message="TODO: show responses from discord"
+        autoHideDuration={5000}
+        onClose={() => {
+          setNotifOpen(false);
+          setNotifText("");
+        }}
         key={"right"}
-      />
+      >
+        <Alert variant="filled" color="info">
+          {notifText}
+        </Alert>
+      </Snackbar>
     </section>
   );
 }
