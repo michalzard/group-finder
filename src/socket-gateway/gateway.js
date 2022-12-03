@@ -7,7 +7,7 @@ const User = require("../server/schemas/user");
 
 const io = new Server(process.env.GATEWAY_PORT, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: process.env.REACT_APP_CLIENT_URL,
   },
 });
 
