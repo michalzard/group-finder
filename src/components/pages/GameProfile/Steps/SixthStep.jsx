@@ -58,7 +58,7 @@ function SixthStep({ game, nextStep }) {
           Linking your <DiscordLogo className="discord-icon" /> account
         </Typography>
         <Typography variant="body2" color="lightgray" gutterBottom>
-          Worry not! With you linking your discord account our app hold only
+          Worry not! With you linking your discord account our app holds only
           data such as <b>id,username & avatar</b>.
           <br />
           <i>This step is completely optional.</i>
