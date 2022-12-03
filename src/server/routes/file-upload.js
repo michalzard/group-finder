@@ -56,10 +56,14 @@ router.post("/", checkCookie, upload.single("avatar"), async (req, res) => {
         await s3.send(getCmd);
         //signed url great for temporary access like for "displaying" preview of what user just uploaded
         const URL = await getSignedUrl(s3, getCmd, { expiresIn: 3000 });
-        res.status(200).send({
-          message: "Avatar uploaded to cloud",
-          avatarURL: URL,
-        });
+        if (URL) {
+          res.status(200).send({
+            message: "Avatar uploaded to cloud",
+            avatarURL: URL,
+          });
+        } else {
+          res.status(404).send({ message: "Error creating s3 signed url" });
+        }
         //attach signed url to response so client can pick that img url
       } else {
         //handle error with s3
