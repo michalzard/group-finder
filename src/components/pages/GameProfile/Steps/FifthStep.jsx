@@ -1,21 +1,28 @@
 import { Avatar, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
-// import ValorantLogo from "../../../../assets/valorant/valologo.png";
 import AddIcon from "@mui/icons-material/Add";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Yoru from "../../../../assets/valorant/yoru.jpg";
 
-function FifthStep() {
+
+function FifthStep({game,nextStep}) {
   const avatarSize = "60px";
   const [avatarSrc, setAvatarSrc] = useState("");
+  const navigate = useNavigate();
   const uploadFile = (file) => {
     if (!file) return;
     const fData = new FormData();
     fData.append("avatar", file);
 
-    axios.post(`${process.env.REACT_APP_API_URL}/upload`,fData,{withCredentials:true}).then((data) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/upload`, fData, {
+        withCredentials: true,
+      })
+      .then((data) => {
         const { message, avatarURL } = data.data;
         if (avatarURL) {
           //TODO: save url to redux
@@ -26,21 +33,31 @@ function FifthStep() {
   };
 
   const bioValidationSchema = yup.object().shape({
-    bio:yup.string().min(5).max(200).required(),
-  })
-  const {values,errors,touched,handleBlur,handleChange,handleSubmit,isSubmitting} = useFormik({
-    initialValues:{
-      bio:"",
+    bio: yup.string().max(200).required(),
+  });
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+  } = useFormik({
+    initialValues: {
+      bio: "",
     },
-    validationSchema:bioValidationSchema,
-    onSubmit:(values,actions)=>{
-      console.log(values);
+    validationSchema: bioValidationSchema,
+    onSubmit: (values, actions) => {
+      console.log(values); //save to redux state
+      navigate(`/creation/${game}/${nextStep}`);
       actions.resetForm();
     },
-  })
+  });
   return (
     <section className="game-profile-container">
-      <form className="game-profile-info">
+    <div className="background-image" style={{backgroundImage:`url(${Yoru})`}}/>
+      <form className="game-profile-info" onSubmit={handleSubmit}>
         <div className="info-left">
           <Typography variant="h5">
             <ContactSupportIcon /> Profile Information
@@ -85,9 +102,20 @@ function FifthStep() {
             }}
             rows={5}
             placeholder="Bio (200)"
+            value={values.bio}
+            error={Boolean(errors.bio)}
+            name="bio"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            helperText={touched.bio && Boolean(errors.bio) ? errors.bio : ""}
             fullWidth
           />
-          <Button variant="outlined" type="submit" disabled={isSubmitting} color="secondary">
+          <Button
+            variant="outlined"
+            type="submit"
+            disabled={isSubmitting}
+            color="secondary"
+          >
             Continue
           </Button>
         </div>
