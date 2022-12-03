@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
     location: {
       type: String,
       required: true,
-      default:"",
+      default: "",
     },
     languages: [
       {
@@ -47,6 +47,21 @@ const userSchema = new mongoose.Schema(
         default: { value: "en", label: "English" },
       },
     ],
+
+    discord: {
+      id: {
+        type: String,
+        default: "",
+      },
+      username: {
+        type: String,
+        default: "",
+      },
+      avatar: {
+        type: String,
+        default: "",
+      },
+    },
   },
   { timestamps: true }
 );

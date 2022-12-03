@@ -21,12 +21,16 @@ const authSlice = createSlice({
       type: "",
     },
   },
-  reducers:{
-    clearFeedback:(state)=>{
+  reducers: {
+    clearFeedback: (state) => {
       state.feedback.open = false;
       state.feedback.message = "";
       state.feedback.type = "";
-    }
+    },
+    updateUser: (state, { payload }) => {
+      const { updated } = payload; //new user state
+      state.user = updated;
+    },
   },
   extraReducers: {
     //userLogin
@@ -121,5 +125,5 @@ const authSlice = createSlice({
     },
   },
 });
-export const {clearFeedback} = authSlice.actions;
+export const { clearFeedback, updateUser } = authSlice.actions;
 export default authSlice.reducer;
