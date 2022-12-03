@@ -49,6 +49,7 @@ const chatRoute = require("./routes/chat");
 const userRoute = require("./routes/user");
 const feedbackRoute = require("./routes/feedback");
 const uploadRoute = require("./routes/file-upload");
+const discordRoute = require("./routes/discord");
 
 app.use("/auth", authRoute);
 app.use("/friends", friendsRoute);
@@ -56,6 +57,8 @@ app.use("/chat", chatRoute);
 app.use("/user", userRoute);
 app.use("/feedback", feedbackRoute);
 app.use("/upload", uploadRoute);
+app.use("/discord",discordRoute);
+
 
 app.use(express.static("src/assets")); //staticly served assets like pictures
 
