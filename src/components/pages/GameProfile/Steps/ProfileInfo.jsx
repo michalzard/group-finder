@@ -7,12 +7,15 @@ import * as yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Yoru from "../../../../assets/valorant/yoru.jpg";
+import { useDispatch } from "react-redux";
+import { setBio, setImage } from "../../../../redux/slices/profileCreation";
 
-
-function FifthStep({game,nextStep}) {
+function FifthStep({ game, nextStep }) {
   const avatarSize = "60px";
   const [avatarSrc, setAvatarSrc] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const uploadFile = (file) => {
     if (!file) return;
     const fData = new FormData();
@@ -24,9 +27,10 @@ function FifthStep({game,nextStep}) {
       })
       .then((data) => {
         const { message, avatarURL } = data.data;
+        console.log(message);
         if (avatarURL) {
-          //TODO: save url to redux
-          setAvatarSrc(avatarURL);
+          dispatch(setImage(avatarURL));
+          setAvatarSrc(avatarURL); //to display it rightaway in creator
         }
       })
       .catch((err) => console.log(err));
@@ -49,14 +53,17 @@ function FifthStep({game,nextStep}) {
     },
     validationSchema: bioValidationSchema,
     onSubmit: (values, actions) => {
-      console.log(values); //save to redux state
+      dispatch(setBio(values.bio));
       navigate(`/creation/${game}/${nextStep}`);
       actions.resetForm();
     },
   });
   return (
     <section className="game-profile-container">
-    <div className="background-image" style={{backgroundImage:`url(${Yoru})`}}/>
+      <div
+        className="background-image"
+        style={{ backgroundImage: `url(${Yoru})` }}
+      />
       <form className="game-profile-info" onSubmit={handleSubmit}>
         <div className="info-left">
           <Typography variant="h5">

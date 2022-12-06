@@ -6,10 +6,12 @@ import * as yup from "yup";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import OmenBackground from "../../../../assets/valorant/omen.png";
 import "./Step.scss";
+import { useDispatch } from "react-redux";
+import { setNickname } from "../../../../redux/slices/profileCreation";
 
 export default function FirstStep({ game, nextStep }) {
   const navigate = useNavigate();
-  // onClick={() => navigate(`/creation/${game}/${nextStep}`)}
+  const dispatch = useDispatch();
   const nicknameValidation = yup.object().shape({
     nickname: yup.string().required().min(3).max(30),
   });
@@ -27,8 +29,10 @@ export default function FirstStep({ game, nextStep }) {
     },
     validationSchema: nicknameValidation,
     onSubmit: (values, actions) => {
-      console.log(values);
+      const { nickname } = values;
+      dispatch(setNickname(nickname));
       navigate(`/creation/${game}/${nextStep}`);
+      actions.resetForm();
     },
   });
   const backgroundImageByGame = useCallback((game) => {

@@ -4,8 +4,11 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import Sova from "../../../../assets/valorant/sova.png";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setAge } from "../../../../redux/slices/profileCreation";
 
 function FourthStep({ game, nextStep }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const ageValidationSchema = yup.object().shape({
     age: yup.number().min(16).max(90).required(),
@@ -17,8 +20,7 @@ function FourthStep({ game, nextStep }) {
       },
       validationSchema: ageValidationSchema,
       onSubmit: (values, actions) => {
-        console.log(values);
-        //todo: save value to redux
+        dispatch(setAge(values.age));
         navigate(`/creation/${game}/${nextStep}`);
         actions.resetForm();
       },

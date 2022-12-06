@@ -5,9 +5,13 @@ import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 
 //bg
 import Jett from "../../../../assets/valorant/jett.jpg";
+import { useDispatch } from "react-redux";
+import { setRoles } from "../../../../redux/slices/profileCreation";
 
 function SecondStep({ game, nextStep }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [selectedRoles, setRole] = useState([]);
 
   return (
     <section className="roles-container">
@@ -49,15 +53,18 @@ function SecondStep({ game, nextStep }) {
             What roles do you play?
           </Typography>
           <div className="roles-select">
-            <RoleButton roleName={"Entry"} />
-            <RoleButton roleName={"Rifle"} />
-            <RoleButton roleName={"Sniper"} />
-            <RoleButton roleName={"Strategist"} />
+            <RoleButton roleName={"Entry"} setRole={setRole} />
+            <RoleButton roleName={"Rifle"} setRole={setRole} />
+            <RoleButton roleName={"Sniper"} setRole={setRole} />
+            <RoleButton roleName={"Strategist"} setRole={setRole} />
 
             <Button
               variant="outlined"
               color="secondary"
-              onClick={() => navigate(`/creation/${game}/${nextStep}`)}
+              onClick={() => {
+                dispatch(setRoles(selectedRoles));
+                navigate(`/creation/${game}/${nextStep}`);
+              }}
             >
               Continue
             </Button>
@@ -70,10 +77,19 @@ function SecondStep({ game, nextStep }) {
 
 export default SecondStep;
 
-function RoleButton({ roleName }) {
+function RoleButton({ roleName, setRole }) {
   const [checked, setChecked] = useState(false);
   return (
-    <div className="role-button" onClick={() => setChecked(!checked)}>
+    <div
+      className="role-button"
+      onClick={() => {
+        setChecked(!checked);
+        if (!checked) setRole((prev) => [...prev, roleName]);
+        else {
+          setRole((prev) => prev.filter((role) => role !== roleName));
+        }
+      }}
+    >
       <Typography variant="subtitle2">{roleName}</Typography>
       <Checkbox checked={checked} />
     </div>

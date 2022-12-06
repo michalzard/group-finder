@@ -29,103 +29,103 @@ import {
 const valorantRanks = [
   {
     src: valoIron1,
-    name: "iron1",
+    value: 1,
   },
   {
     src: valoIron2,
-    name: "iron2",
+    value: 2,
   },
   {
     src: valoIron3,
-    name: "iron3",
+    value: 3,
   },
   {
     src: valoBronze1,
-    name: "bronze1",
+    value: 4,
   },
   {
     src: valoBronze2,
-    name: "bronze2",
+    value: 5,
   },
   {
     src: valoBronze3,
-    name: "bronze3",
+    value: 6,
   },
   {
     src: valoSilver1,
-    name: "silver1",
+    value: 7,
   },
   {
     src: valoSilver2,
-    name: "silver2",
+    value: 8,
   },
   {
     src: valoSilver3,
-    name: "silver3",
+    value: 9,
   },
   {
     src: valoGold1,
-    name: "gold1",
+    value: 10,
   },
   {
     src: valoGold2,
-    name: "gold2",
+    value: 11,
   },
   {
     src: valoGold3,
-    name: "gold3",
+    value: 12,
   },
   {
     src: valoPlatinum1,
-    name: "plat1",
+    value: 13,
   },
   {
     src: valoPlatinum2,
-    name: "plat2",
+    value: 14,
   },
   {
     src: valoPlatinum3,
-    name: "plat3",
+    value: 15,
   },
   {
     src: valoDiamond1,
-    name: "dia1",
+    value: 16,
   },
   {
     src: valoDiamond2,
-    name: "dia2",
+    value: 17,
   },
   {
     src: valoDiamond3,
-    name: "dia3",
+    value: 18,
   },
   {
     src: valoAscendant1,
-    name: "asc1",
+    value: 19,
   },
   {
     src: valoAscendant2,
-    name: "asc2",
+    value: 20,
   },
   {
     src: valoAscendant3,
-    name: "asc3",
+    value: 21,
   },
   {
     src: valoImmortal1,
-    name: "immo1",
+    value: 22,
   },
   {
     src: valoImmortal2,
-    name: "immo2",
+    value: 23,
   },
   {
     src: valoImmortal3,
-    name: "immo3",
+    value: 24,
   },
   {
     src: valoRadiant,
-    name: "radiant",
+    value: 25,
   },
 ];
 

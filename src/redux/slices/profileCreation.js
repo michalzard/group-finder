@@ -1,27 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { profile } from "console";
 
 const initialState = {
   nickname: "",
   roles: [],
-  rank: "",
-  age: "",
-  // profile -> user submits picture and short biography,
+  rank: 0,
+  age: 18,
   profile: {
     imgUrl: "",
     bio: "",
   },
-  integrations: {
-    discord: {
-      id: "",
-      avatar: "",
-      username: "",
-    },
-  },
 };
 
 const profileCreationSlice = createSlice({
-  name: "Profile Creation",
+  name: "Profile Creator",
   initialState,
   reducers: {
     setNickname: (state, { payload }) => {
@@ -34,23 +25,19 @@ const profileCreationSlice = createSlice({
         state.roles = payload;
       }
     },
+    setAge: (state, { payload }) => {
+      if (typeof payload === "number") state.age = payload;
+    },
     setRank: (state, { payload }) => {
-      if (typeof payload === "string") state.rank = payload;
+      if (typeof payload === "number") state.rank = payload;
     },
-    setProfile: (state, { payload }) => {
-      const { imgURL, bio } = payload;
-      state.profile.imgUrl = imgURL;
-      state.profile.bio = bio;
+    setBio: (state, { payload }) => {
+      state.profile.bio = payload;
     },
-    setIntegration: (state, { payload }) => {
-      const { integrationName, ...params } = payload;
-      if (integrationName === "discord") {
-        state.integrations.discord.id = params.id;
-        state.integrations.discord.avatar = params.avatar;
-        state.integrations.discord.username = params.username;
-      }
+    setImage: (state, { payload }) => {
+      state.profile.imgUrl = payload;
     },
-    resetProfileCreator: (state) => {
+    reset: (state) => {
       state = initialState;
     },
   },
@@ -60,9 +47,10 @@ export const {
   setNickname,
   setRoles,
   setRank,
-  setProfile,
-  setIntegration,
-  resetProfileCreator,
+  setAge,
+  setBio,
+  setImage,
+  reset,
 } = profileCreationSlice.actions;
 
 export default profileCreationSlice.reducer;

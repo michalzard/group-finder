@@ -253,15 +253,57 @@
   }
 }
 
-.game-profile-summary {
+.game-profile-summary-container {
   flex-direction: row !important;
-  .summary-labels {
-    display: flex;
-    flex-direction: column;
+
+  .game-profile-info {
+    position: relative;
     margin-right: 20px;
+    max-width: 350px;
   }
-  .summary-values {
+
+  .game-profile-summary {
+    position: relative;
     display: flex;
-    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    padding: 25px;
+    .summary-labels {
+      display: flex;
+      flex-direction: column;
+      margin-right: 20px;
+      border-right: 1px solid lightgray;
+      p {
+        margin-right: inherit;
+      }
+    }
+    .summary-values {
+      display: flex;
+      flex-direction: column;
+      .summary-value {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      svg {
+        margin-left: 10px;
+      }
+      svg:hover {
+        color: $gradient-pink;
+        cursor: pointer;
+      }
+      button:last-child {
+        margin: 5px 0;
+      }
+      .discord-value {
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 10px;
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
   }
 }

@@ -1,17 +1,19 @@
-import { Step, StepLabel, Stepper } from "@mui/material";
+import { Fab, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./GameProfileCreator.scss";
 import Header from "../../Header";
 //steps
-import FirstStep from "./Steps/FirstStep";
-import SecondStep from "./Steps/SecondStep";
-import ThirdStep from "./Steps/ThirdStep";
-import FourthStep from "./Steps/FourthStep";
-import FifthStep from "./Steps/FifthStep";
-import SixthStep from "./Steps/SixthStep";
-import SeventhStep from "./Steps/SeventhStep";
-import LastStep from "./Steps/LastStep";
+import Nickname from "./Steps/Nickname";
+import Roles from "./Steps/Roles";
+import Agents from "./Steps/Agents";
+import Rank from "./Steps/Rank";
+import Age from "./Steps/Age";
+import ProfileInfo from "./Steps/ProfileInfo";
+import Integration from "./Steps/Integration";
+import Summary from "./Steps/Summary";
+
+import NavigationIcon from "@mui/icons-material/Navigation";
 
 function GameProfileCreator() {
   const { game, step } = useParams();
@@ -21,7 +23,7 @@ function GameProfileCreator() {
     <main className="gameProfileCreator-container">
       <Header />
       <div className="gameProfileCreator">
-        <StepNavigation activeStep={parseInt(step)} />
+        <StepNavigation game={game} activeStep={parseInt(step)} />
         <StepHandler game={game} activeStep={parseInt(step)} />
       </div>
     </main>
@@ -30,10 +32,12 @@ function GameProfileCreator() {
 
 export default GameProfileCreator;
 
-function StepNavigation({ activeStep }) {
+function StepNavigation({ game, activeStep }) {
+  const navigate = useNavigate();
   const steps = [
     "Nickname",
     "Roles",
+    "Agents",
     "Rank",
     "Age",
     "Profile",
@@ -41,17 +45,30 @@ function StepNavigation({ activeStep }) {
     "Summary",
   ];
   return (
-    <Stepper
-      activeStep={activeStep - 1}
-      alternativeLabel
-      className="step-navigation"
-    >
-      {steps.map((label) => (
-        <Step key={label}>
-          <StepLabel>{label}</StepLabel>
-        </Step>
-      ))}
-    </Stepper>
+    <>
+      <Stepper
+        activeStep={activeStep - 1}
+        alternativeLabel
+        className="step-navigation"
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      {activeStep !== steps.length ? (
+        <Fab
+          className="skip-to-summary"
+          size="medium"
+          variant="circular"
+          onClick={() => navigate(`/creation/${game}/${steps.length}`)}
+        >
+          <NavigationIcon />
+          {/* Skip to summary */}
+        </Fab>
+      ) : null}
+    </>
   );
 }
 
@@ -59,22 +76,22 @@ function StepHandler({ game, activeStep }) {
   const nextStep = activeStep + 1;
   switch (activeStep) {
     case 1:
-      return <FirstStep game={game} nextStep={nextStep} />;
+      return <Nickname game={game} nextStep={nextStep} />;
     case 2:
-      return <SecondStep game={game} nextStep={nextStep} />;
+      return <Age game={game} nextStep={nextStep} />;
     case 3:
-      return <ThirdStep game={game} nextStep={nextStep} />;
+      return <Roles game={game} nextStep={nextStep} />;
     case 4:
-      return <FourthStep game={game} nextStep={nextStep} />;
+      return <Agents game={game} nextStep={nextStep} />;
     case 5:
-      return <FifthStep game={game} nextStep={nextStep} />;
+      return <Rank game={game} nextStep={nextStep} />;
     case 6:
-      return <SixthStep game={game} nextStep={nextStep} />;
+      return <ProfileInfo game={game} nextStep={nextStep} />;
     case 7:
-      return <SeventhStep game={game} nextStep={nextStep} />;
+      return <Integration game={game} nextStep={nextStep} />;
     case 8:
-      return <LastStep game={game} nextStep={nextStep} />;
+      return <Summary game={game} nextStep={nextStep} />;
     default:
-      return <FirstStep game={game} nextStep={nextStep} />;
+      return <Nickname game={game} nextStep={nextStep} />;
   }
 }
