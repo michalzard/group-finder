@@ -43,9 +43,12 @@ function ProfileCreation() {
             <Typography>Choose your game.</Typography>
             <div className="game-list">
               <GameProfileLink gameName={"valorant"} image={ValorantLogo} />
-              <GameProfileLink gameName={"csgo"} image={CSGOLogo} />
-              <GameProfileLink gameName={"rust"} image={RustLogo} />
+              {/* <GameProfileLink gameName={"csgo"} image={CSGOLogo} /> */}
+              {/* <GameProfileLink gameName={"rust"} image={RustLogo} /> */}
             </div>
+            <Typography style={{ textAlign: "center" }}>
+              New games coming soon ...
+            </Typography>
           </section>
         </div>
       </main>

@@ -1,4 +1,4 @@
-import { Fab, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { Fab, Step, StepLabel, Stepper } from "@mui/material";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./GameProfileCreator.scss";
@@ -12,7 +12,6 @@ import Age from "./Steps/Age";
 import ProfileInfo from "./Steps/ProfileInfo";
 import Integration from "./Steps/Integration";
 import Summary from "./Steps/Summary";
-
 import NavigationIcon from "@mui/icons-material/Navigation";
 
 function GameProfileCreator() {
@@ -36,10 +35,10 @@ function StepNavigation({ game, activeStep }) {
   const navigate = useNavigate();
   const steps = [
     "Nickname",
+    "Age",
     "Roles",
     "Agents",
     "Rank",
-    "Age",
     "Profile",
     "Discord",
     "Summary",

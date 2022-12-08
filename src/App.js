@@ -23,7 +23,7 @@ const Chat = lazy(() => import("./components/pages/Friends/Chat"));
 const FriendStatus = lazy(() =>
   import("./components/pages/Friends/FriendStatus")
 );
-const Discover = lazy(() => import("./components/pages/Discover"));
+const Discover = lazy(() => import("./components/pages/Discovery/Discover"));
 
 function App() {
   const dispatch = useDispatch();

@@ -7,7 +7,7 @@ import * as yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Yoru from "../../../../assets/valorant/yoru.jpg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setBio, setImage } from "../../../../redux/slices/profileCreation";
 
 function FifthStep({ game, nextStep }) {
@@ -36,6 +36,8 @@ function FifthStep({ game, nextStep }) {
       .catch((err) => console.log(err));
   };
 
+  const { bio } = useSelector((state) => state.profileCreator.profile);
+
   const bioValidationSchema = yup.object().shape({
     bio: yup.string().max(200).required(),
   });
@@ -49,7 +51,7 @@ function FifthStep({ game, nextStep }) {
     isSubmitting,
   } = useFormik({
     initialValues: {
-      bio: "",
+      bio,
     },
     validationSchema: bioValidationSchema,
     onSubmit: (values, actions) => {
@@ -58,6 +60,7 @@ function FifthStep({ game, nextStep }) {
       actions.resetForm();
     },
   });
+
   return (
     <section className="game-profile-container">
       <div

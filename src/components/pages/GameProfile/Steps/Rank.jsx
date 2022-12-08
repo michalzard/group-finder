@@ -31,7 +31,6 @@ function ThirdStep({ game, nextStep }) {
             alignSelf: "flex-end",
             marginTop: "5px",
           }}
-          size="large"
           onClick={() => {
             dispatch(setRank(selected));
             navigate(`/creation/${game}/${nextStep}`);
@@ -55,6 +54,7 @@ function YourRank({ selected, setSelected }) {
         <RankButton
           key={i}
           imgSrc={vRank.src}
+          value={vRank.value}
           selected={selected === vRank.value}
           onSelect={setSelected}
         />
@@ -63,15 +63,15 @@ function YourRank({ selected, setSelected }) {
   );
 }
 
-function RankButton({ imgSrc, name, selected, onSelect }) {
+function RankButton({ imgSrc, value, selected, onSelect }) {
   return (
     <div
       className={`rank_button ${selected ? "rank_selected" : ""}`}
       onClick={() => {
-        onSelect(name);
+        onSelect(value);
       }}
     >
-      <img src={imgSrc} alt={name} />
+      <img src={imgSrc} alt={"Picture of rank"} />
     </div>
   );
 }

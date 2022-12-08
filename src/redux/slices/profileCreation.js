@@ -5,6 +5,7 @@ const initialState = {
   roles: [],
   rank: 0,
   age: 18,
+  agents: [],
   profile: {
     imgUrl: "",
     bio: "",
@@ -23,6 +24,13 @@ const profileCreationSlice = createSlice({
         state.roles.push((prev) => [...prev, payload]);
       else if (Array.isArray(payload)) {
         state.roles = payload;
+      }
+    },
+    setAgents: (state, { payload }) => {
+      if (typeof payload === "string")
+        state.agents.push((prev) => [...prev, payload]);
+      else if (Array.isArray(payload)) {
+        state.agents = payload;
       }
     },
     setAge: (state, { payload }) => {
@@ -46,6 +54,7 @@ const profileCreationSlice = createSlice({
 export const {
   setNickname,
   setRoles,
+  setAgents,
   setRank,
   setAge,
   setBio,

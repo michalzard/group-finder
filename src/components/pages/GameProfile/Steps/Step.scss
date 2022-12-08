@@ -275,6 +275,7 @@
       border-right: 1px solid lightgray;
       p {
         margin-right: inherit;
+        height: 30px;
       }
     }
     .summary-values {
@@ -284,6 +285,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 35px;
       }
       svg {
         margin-left: 10px;
@@ -306,4 +308,48 @@
       }
     }
   }
+}
+
+.agent-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  .agent-selection-info {
+    h6 {
+      svg {
+        margin-right: 10px;
+      }
+      display: flex;
+      align-items: center;
+      text-shadow: 2px 2px 2px black;
+    }
+    margin-right: 10px;
+  }
+
+  .agents {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    max-width: 320px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .agent-button {
+    $agentAvatarSize: 60px;
+    width: $agentAvatarSize;
+    height: $agentAvatarSize;
+    filter: grayscale(1);
+    margin: 2px;
+  }
+  .agent-selected {
+    filter: grayscale(0);
+  }
+}
+
+.agent-button:hover {
+  filter: grayscale(0);
+  cursor: pointer;
+}
+.agent-selection-container > button {
+  margin-top: 20px;
 }

@@ -1,11 +1,13 @@
 import { Button, Typography } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import Skye from "../../../../assets/valorant/skye.jpg";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as DiscordLogo } from "../../../../assets/discord-logo.svg";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import agentData from "../../../../assets/valorant/agents/agentData";
+import valorantRanks from "../../../../assets/valorant/ranks/rankData";
 
 function SeventhStep({ game, nextStep }) {
   const DISCORD_CDN = "https://cdn.discordapp.com";
@@ -13,11 +15,26 @@ function SeventhStep({ game, nextStep }) {
     (state) => state.auth.user.discord
   );
 
-  const { nickname, roles, rank, age, profile } = useSelector(
+  const { nickname, roles, agents, rank, age, profile } = useSelector(
     (state) => state.profileCreator
   );
   const navigate = useNavigate();
   const baseBackLocation = `/creation/${game}/`;
+
+  const getAgentIcon = useCallback((agentName) => {
+    const index = agentData.findIndex(
+      (data) => data.name.toLowerCase() === agentName
+    );
+    if (index !== -1) return agentData[index].icon;
+    return;
+  }, []);
+
+  const getRankIcon = useCallback((rankValue) => {
+    //valorantRanks
+    const index = valorantRanks.findIndex((rank) => rank.value === rankValue);
+    if (index !== -1) return valorantRanks[index].src;
+    return;
+  }, []);
 
   return (
     <section className="game-profile-summary-container">
@@ -42,9 +59,10 @@ function SeventhStep({ game, nextStep }) {
       <div className="game-profile-summary">
         <div className="summary-labels">
           <Typography gutterBottom>Nickname</Typography>
-          <Typography gutterBottom>Roles</Typography>
-          <Typography gutterBottom>Rank</Typography>
           <Typography gutterBottom>Age</Typography>
+          <Typography gutterBottom>Roles</Typography>
+          <Typography gutterBottom>Agents</Typography>
+          <Typography gutterBottom>Rank</Typography>
           <Typography gutterBottom>Profile</Typography>
           <Typography gutterBottom>Discord</Typography>
         </div>
@@ -54,22 +72,55 @@ function SeventhStep({ game, nextStep }) {
             backLocation={baseBackLocation + "1"}
           />
           <SummaryValue
-            displayValue={
-              roles.length > 0 ? roles.map((role) => `${role},`) : null
-            }
+            displayValue={age}
             backLocation={baseBackLocation + "2"}
           />
           <SummaryValue
-            displayValue={rank}
+            displayValue={
+              roles.length > 0 ? roles.map((role) => `${role},`) : null
+            }
             backLocation={baseBackLocation + "3"}
           />
           <SummaryValue
-            displayValue={age}
+            displayValue={
+              <>
+                {agents.length > 0 ? (
+                  agents.map((agent, i) => {
+                    if (i < 3) {
+                      return (
+                        <img
+                          key={agent}
+                          alt={`${agent} icon`}
+                          style={{ width: 40, height: 40 }}
+                          src={`${getAgentIcon(agent)}`}
+                        />
+                      );
+                    } else return null;
+                  })
+                ) : (
+                  <span style={{ color: "lightgray" }}>Missing value ...</span>
+                )}
+                {agents.length > 3 ? "..." : null}
+              </>
+            }
             backLocation={baseBackLocation + "4"}
           />
           <SummaryValue
-            displayValue={profile.bio}
+            displayValue={
+              rank ? (
+                <img width={30} height={30} src={getRankIcon(rank)} />
+              ) : null
+            }
             backLocation={baseBackLocation + "5"}
+          />
+
+          <SummaryValue
+            displayValue={
+              profile.bio ? (
+                <span style={{ color: "green" }}>Submitted</span>
+              ) : null
+            }
+            backLocation={baseBackLocation + "6"}
           />
           <div className="discord-value">
             {username ? (
@@ -79,7 +130,7 @@ function SeventhStep({ game, nextStep }) {
                   alt="discord avatar"
                 />
                 <Typography>{username}</Typography>
-                <EditIcon onClick={() => navigate(baseBackLocation + "6")} />
+                <EditIcon onClick={() => navigate(baseBackLocation + "7")} />
               </>
             ) : (
               <Button
